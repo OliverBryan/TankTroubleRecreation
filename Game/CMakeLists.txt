@@ -1,0 +1,48 @@
+project(Game VERSION 1.0 LANGUAGES CXX)
+
+include(FetchContent)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(SFML_BUILD_AUDIO FALSE)
+
+message("Fetching SFML...")
+FetchContent_Declare(
+	SFML
+	GIT_REPOSITORY https://github.com/SFML/SFML.git
+	GIT_TAG 2.5.1
+)
+FetchContent_MakeAvailable(SFML)
+
+message("Fetching Box2D")
+FetchContent_Declare(
+	Box2D
+	GIT_REPOSITORY https://github.com/erincatto/box2d.git
+	GIT_TAG main
+)
+FetchContent_MakeAvailable(Box2D)
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS True)
+set(BUILD_SHARED_LIBS True)
+
+add_executable(Game ./src/Environment.cpp ./src/Environment.hpp 
+			    ./src/Interface.cpp ./src/Interface.hpp
+			    ./src/Main.cpp ./src/Maze.cpp ./src/Maze.hpp
+			    ./src/Resources.cpp ./src/Resources.hpp
+  			    ./src/Tank.cpp ./src/Tank.hpp)
+target_link_libraries(Game sfml-graphics sfml-network box2d)
+
+# copy sfml dlls post build
+if(WIN32)
+  if (BUILD_SHARED_LIBS)
+    add_custom_command(TARGET Game POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          $<TARGET_FILE:sfml-graphics>
+          $<TARGET_FILE:sfml-window>
+          $<TARGET_FILE:sfml-system>
+          $<TARGET_FILE:sfml-network>
+          $<TARGET_FILE:box2d>
+          $<TARGET_FILE_DIR:Game>)
+  endif()
+endif()
