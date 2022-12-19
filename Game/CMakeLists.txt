@@ -15,7 +15,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-message("Fetching Box2D")
+message("Fetching Box2D...")
 FetchContent_Declare(
 	Box2D
 	GIT_REPOSITORY https://github.com/erincatto/box2d.git
@@ -26,14 +26,33 @@ FetchContent_MakeAvailable(Box2D)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS True)
 set(BUILD_SHARED_LIBS True)
 
+message("Fetching Log...")
+FetchContent_Declare(
+    Log
+    GIT_REPOSITORY https://github.com/OliverBryan/Log.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(Log)
+
+set(BUILD_EXAMPLES OFF)
+
+message("Fetching libconfig...")
+FetchContent_Declare(
+	libconfig
+	GIT_REPOSITORY https://github.com/hyperrealm/libconfig.git
+	GIT_TAG master
+)
+FetchContent_MakeAvailable(libconfig)
+
 add_executable(Game ./src/Environment.cpp ./src/Environment.hpp 
 			    ./src/Interface.cpp ./src/Interface.hpp
 			    ./src/Main.cpp ./src/Maze.cpp ./src/Maze.hpp
 			    ./src/Resources.cpp ./src/Resources.hpp
-  			    ./src/Tank.cpp ./src/Tank.hpp)
-target_link_libraries(Game sfml-graphics sfml-network box2d)
+  			    ./src/Tank.cpp ./src/Tank.hpp
+			    ./src/Config.cpp ./src/Config.hpp)
+target_link_libraries(Game sfml-graphics sfml-network box2d Log libconfig++)
 
-# copy sfml dlls post build
+# copy dlls post build
 if(WIN32)
   if (BUILD_SHARED_LIBS)
     add_custom_command(TARGET Game POST_BUILD
@@ -43,6 +62,8 @@ if(WIN32)
           $<TARGET_FILE:sfml-system>
           $<TARGET_FILE:sfml-network>
           $<TARGET_FILE:box2d>
+          $<TARGET_FILE:Log>
+          $<TARGET_FILE:libconfig++>
           $<TARGET_FILE_DIR:Game>)
   endif()
 endif()

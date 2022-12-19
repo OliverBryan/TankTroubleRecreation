@@ -20,7 +20,7 @@ public:
 private:
 	Tank tank;
 
-	b2World world;
+	b2World* world;
 
 	Interface ui;
 

@@ -1,13 +1,22 @@
 #include "Environment.hpp"
 
 #include <box2d/box2d.h>
+#include <Log.hpp>
 
-//TODO: exceptionpill
+#include "Config.hpp"
 
-//#define DEBUG_LOG_FPS
-#define VSYNC_ON
+//TODO: don't crash when reading config file
 
 int main() {
+    Log::init("Log.txt");
+
+    Config::init();
+
+    const bool vsyncEnabled = Config::getSetting("enableVSync", true);
+    const bool logFPS = Config::getSetting("logFPS", false);
+
+    Log::logStatus(std::string("VSync is ") + (vsyncEnabled ? "enabled" : "disabled"), ConsoleColor::LightPurple);
+
     sf::ContextSettings cs; cs.antialiasingLevel = 16;
     sf::RenderWindow window(sf::VideoMode(1050, 670), "Tank Trouble", sf::Style::Titlebar | sf::Style::Close, cs); // Game space: 550 x 550
 
@@ -20,9 +29,8 @@ int main() {
 
     window.setFramerateLimit(144);
 
-#ifdef VSYNC_ON
-    window.setVerticalSyncEnabled(true);
-#endif
+    if (vsyncEnabled)
+        window.setVerticalSyncEnabled(true);
 
     std::size_t frameCount = 0;
     std::size_t counter = 0;
@@ -39,23 +47,23 @@ int main() {
 
             env.tick();
             
-#ifdef DEBUG_LOG_FPS
-            counter++;
+            if (logFPS) {
+                counter++;
 
-            if (counter > Environment::TPS) {
-                counter = 0;
-                std::cout << "FPS: " << frameCount << std::endl;
-                frameCount = 0;
+                if (counter > Environment::TPS) {
+                    counter = 0;
+                    Log::logStatus("FPS: " + std::to_string(frameCount), ConsoleColor::NeonBlue);
+                    frameCount = 0;
+                }
             }
-#endif
         }
 
         window.clear(sf::Color::White);
         env.render(window);
         window.display();
-#ifdef DEBUG_LOG_FPS
-        frameCount++;
-#endif DEBUG_LOG_FPS
+
+        if (logFPS)
+            frameCount++;
 
         accumulator += clock.restart();
     }

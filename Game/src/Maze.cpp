@@ -3,8 +3,6 @@
 Maze::Maze(const sf::Vector2i& size, std::vector<sf::RectangleShape>&& walls) : size(size), walls(walls) {
 	field.setPosition(sf::Vector2f(250.f, 45.f));
 	field.setFillColor(sf::Color(231, 231, 231));
-
-	std::cout << field.getSize().x << " " << field.getSize().y << std::endl;
 }
 
 void Maze::render(sf::RenderWindow& window) {
@@ -73,7 +71,7 @@ Maze Maze::loadMaze(const std::string& fileName) {
 		}
 		file.close();
 
-		return Maze(sf::Vector2i(9, 9), std::move(walls)); // dynamic sizing later
+		return Maze(sf::Vector2i(9, 9), std::move(walls)); // TODO: dynamic sizing
 	}
 	else {
 		std::cout << "Error: could not open map.dat" << std::endl;

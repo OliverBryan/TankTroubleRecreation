@@ -1,12 +1,15 @@
 #include "Tank.hpp"
 #include "Maze.hpp"
 #include "Environment.hpp"
+#include "Config.hpp"
+#include <Log.hpp>
 
 // collision detection library
 
+#define FIXED_ROTATION
+
 Tank::Tank() : position(sf::Vector2f(300.f, 100.f)) {
 	// 35px * 20px   50 x 32
-	
 	sprite.setTexture(Resources::getResource("tank"));
 	sf::FloatRect spriteBounds = sprite.getLocalBounds();
 	sprite.setOrigin(sf::Vector2f(spriteBounds.left + (spriteBounds.width - 8) / 2.0f, spriteBounds.top + spriteBounds.height / 2.0f));
@@ -68,6 +71,11 @@ void Tank::setUpCollisions(b2World* world) {
 	b2BodyDef tankBodyDef;
 	tankBodyDef.type = b2_dynamicBody;
 	tankBodyDef.position.Set(bounds.getPosition().x / 100.f, bounds.getPosition().y / 100.f);
+
+	bool fixedRotation = Config::getSetting("fixedRotation", true);
+	Log::logStatus(std::string("Fixed rotation is ") + (fixedRotation ? "enabled" : "disabled"), ConsoleColor::LightPurple);
+	tankBodyDef.fixedRotation = fixedRotation;
+
 	tankBody = world->CreateBody(&tankBodyDef);
 
 	b2PolygonShape tankBox;
