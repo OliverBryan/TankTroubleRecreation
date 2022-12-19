@@ -6,8 +6,6 @@
 
 // collision detection library
 
-#define FIXED_ROTATION
-
 Tank::Tank() : position(sf::Vector2f(300.f, 100.f)) {
 	// 35px * 20px   50 x 32
 	sprite.setTexture(Resources::getResource("tank"));
@@ -34,30 +32,20 @@ void Tank::tick(const std::vector<sf::RectangleShape>& walls, b2World* world) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		tankBody->SetAngularVelocity(-3.87463);
 		angle -= 3.7;
-		//bounds.setRotation(angle);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		tankBody->SetAngularVelocity(3.87463f);
 		angle += 3.7;
-		//bounds.setRotation(angle);
 	}
-	else {
-		tankBody->SetAngularVelocity(0.0f);
-	}
+	else tankBody->SetAngularVelocity(0.0f);
 
 	velocity = sf::Vector2f(1.386f * cos(angle * (3.141592653589793 / 180.0)), 1.386f * sin(angle * (3.141592653589793 / 180.0)));
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		//std::cout << std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y) << "\n";
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		tankBody->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
-		//tankBody->SetLinearVelocity(tankBody->GetLinearVelocity());
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		tankBody->SetLinearVelocity(b2Vec2(-velocity.x, -velocity.y));
-	}
-	else {
-		tankBody->SetLinearVelocity(b2Vec2(0.f, 0.f));
-	}
+	else tankBody->SetLinearVelocity(b2Vec2(0.f, 0.f));
 
 	world->Step(1.f / Environment::TPS, 10, 10);
 

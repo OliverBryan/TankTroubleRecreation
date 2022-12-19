@@ -38,7 +38,7 @@ private:
 	bool drawBounds = false;
 
 	// collision data
-	b2Body* tankBody;
+	b2Body* tankBody = nullptr; // ok because this is immediately initialized by the environment
 };
 
 #endif /* TANK_HPP */

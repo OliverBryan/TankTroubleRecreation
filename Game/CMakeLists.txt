@@ -67,3 +67,14 @@ if(WIN32)
           $<TARGET_FILE_DIR:Game>)
   endif()
 endif()
+
+# copy other resources
+add_custom_command(TARGET Game POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_CURRENT_SOURCE_DIR}/res
+  ${CMAKE_CURRENT_BINARY_DIR}/res)
+
+add_custom_command(TARGET Game POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_CURRENT_SOURCE_DIR}/res
+  $<TARGET_FILE_DIR:Game>/res)

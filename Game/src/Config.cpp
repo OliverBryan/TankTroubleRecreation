@@ -7,7 +7,7 @@ void Config::init() {
     Log::logStatus("Loading settings.cfg...", ConsoleColor::DarkBlue);
 
     try {
-        cfg.readFile("settings.cfg");
+        cfg.readFile("./res/settings.cfg");
     }
     catch (const libconfig::FileIOException& ex) {
         Log::logError("IO error reading settings.cfg");

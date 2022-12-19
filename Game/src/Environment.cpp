@@ -1,7 +1,7 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 
-Environment::Environment() : maze(Maze::loadMaze("maze.dat")), world(new b2World(b2Vec2(0.0f, 0.0f))) { 
+Environment::Environment() : maze(Maze::loadMaze("./res/mazes/maze.dat")), world(new b2World(b2Vec2(0.0f, 0.0f))) { 
 	tank.setUpCollisions(world);
 
 	for (const auto& wall : maze.walls) {

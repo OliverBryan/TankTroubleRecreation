@@ -2,7 +2,7 @@
 #include "Environment.hpp"
 
 Interface::Interface() {
-	if (!font.loadFromFile("Roboto-Thin.ttf")) {
+	if (!font.loadFromFile("./res/Roboto-Thin.ttf")) {
 		std::cout << "Error: could not load Roboto-Thin.ttf" << std::endl;
 		exit(-1);
 	}

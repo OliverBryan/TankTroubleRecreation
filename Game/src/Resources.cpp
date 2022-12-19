@@ -4,12 +4,12 @@ std::unordered_map<std::string, sf::Texture> Resources::resources;
 
 void Resources::init() {
 	std::string line;
-	std::ifstream file("resources.dat");
+	std::ifstream file("./res/resources.dat");
 	if (file.is_open()) {
 		while (std::getline(file, line)) {
 			sf::Texture texture;
-			if (!texture.loadFromFile(line + ".png")) {
-				std::cout << "Error: could not open " << line << ".png" << std::endl;
+			if (!texture.loadFromFile("./res/sprites/" + line + ".png")) {
+				std::cout << "Error: could not open " << "./res/sprites/" << line << ".png" << std::endl;
 				exit(-1);
 			}
 
