@@ -35,6 +35,7 @@ private:
 
 	sf::Sprite sprite;
 	sf::RectangleShape bounds;
+	bool drawBounds = false;
 
 	// collision data
 	b2Body* tankBody;

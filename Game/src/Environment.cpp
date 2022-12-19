@@ -1,4 +1,5 @@
 #include "Environment.hpp"
+#include "Config.hpp"
 
 Environment::Environment() : maze(Maze::loadMaze("maze.dat")), world(new b2World(b2Vec2(0.0f, 0.0f))) { 
 	tank.setUpCollisions(world);
@@ -16,7 +17,8 @@ Environment::Environment() : maze(Maze::loadMaze("maze.dat")), world(new b2World
 
 		wallBoxDef.shape = &wallBox;
 		wallBoxDef.density = 0.0f;
-		wallBoxDef.friction = 0.05f;
+		wallBoxDef.friction = 0.9f;
+		wallBoxDef.restitution = 0.05f;
 
 		wallBody->CreateFixture(&wallBoxDef);
 	}

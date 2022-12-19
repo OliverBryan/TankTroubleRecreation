@@ -19,11 +19,15 @@ Tank::Tank() : position(sf::Vector2f(300.f, 100.f)) {
 	bounds.setOrigin(sf::Vector2f(spriteBounds.left + (spriteBounds.width - 8) / 2.0f, spriteBounds.top + spriteBounds.height / 2.0f));
 	bounds.setPosition(sprite.getPosition());
 	bounds.setFillColor(sf::Color::Black);
+
+	drawBounds = Config::getSetting("drawBounds", false);
 }
 
 void Tank::render(sf::RenderWindow& window) {
 	window.draw(sprite);
-	window.draw(bounds);
+
+	if (drawBounds)
+		window.draw(bounds);
 }
 
 void Tank::tick(const std::vector<sf::RectangleShape>& walls, b2World* world) {

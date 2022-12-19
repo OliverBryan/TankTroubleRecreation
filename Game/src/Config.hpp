@@ -2,6 +2,7 @@
 #define CONFIG_HPP
 
 #include <libconfig.h++>
+#include <Log.hpp>
 
 class Config {
 public:
