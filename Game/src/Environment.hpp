@@ -28,7 +28,8 @@ public:
 	static constexpr float TPS = 60.0f;
 
 private:
-	Tank tank;
+	Tank player1;
+	Tank player2;
 
 	// box2d world is used to compute collisions and the movement of tanks and bullets
 	// everything is scaled down by 100 to keep box2d from crapping itself

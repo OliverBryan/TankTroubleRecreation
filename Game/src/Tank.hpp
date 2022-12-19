@@ -9,7 +9,7 @@ class Maze;
 // Represents a player controlled tank
 class Tank {
 public:
-	Tank();
+	Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor);
 	~Tank() {}
 
 	/// <summary>
@@ -19,7 +19,12 @@ public:
 	void render(sf::RenderWindow& window);
 
 	/// <summary>
-	/// Update the tank, and update the box2d world (calls b2World::Step)
+	/// Move the tank based on input, meant to be called during Environment::tick but before b2World::Step is called
+	/// </summary>
+	void move();
+
+	/// <summary>
+	/// Update the tank based on the results of b2World::Step
 	/// </summary>
 	/// <param name="world">box2d world</param>
 	void tick(b2World* world);
@@ -34,7 +39,8 @@ public:
 	/// Registers the tank in the box2d world. This must be called before the game starts
 	/// </summary>
 	/// <param name="world">box2d world</param>
-	void setUpCollisions(b2World* world);
+	/// <param name="index">Collision index of the tank</param>
+	void setUpCollisions(b2World* world, uint16 index);
 
 	/// <summary>
 	/// Get the position of the tank
@@ -61,6 +67,11 @@ private:
 
 	// collision data
 	b2Body* tankBody = nullptr; // ok because this is immediately initialized by the environment
+
+	// keybinds
+	// index 0 is forward, 1 is backwards, 2 is left, and 3 is right
+	// for example, the arrow keys would be {up, down, left, right} and WASD would be {w, s, a, d}
+	std::vector<sf::Keyboard::Key> keys;
 };
 
 #endif /* TANK_HPP */

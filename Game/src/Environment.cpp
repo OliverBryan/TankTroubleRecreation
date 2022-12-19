@@ -1,9 +1,13 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 
-Environment::Environment() : maze(Maze::loadMaze("./res/mazes/emptyMaze.dat")), world(new b2World(b2Vec2(0.0f, 0.0f))) {
+Environment::Environment() : maze(Maze::loadMaze("./res/mazes/emptyMaze.dat")), 
+							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
+							 player1({sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right}, sf::Color::Green),
+							 player2({ sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D}, sf::Color::Red) {
 	// set up box2d with the tank
-	tank.setUpCollisions(world);
+	player1.setUpCollisions(world, 0x0002);
+	player2.setUpCollisions(world, 0x0003);
 
 	// add maze to box2d world
 	for (const auto& wall : maze.walls) {
@@ -26,6 +30,10 @@ Environment::Environment() : maze(Maze::loadMaze("./res/mazes/emptyMaze.dat")), 
 		wallBoxDef.friction = 0.9f;
 		wallBoxDef.restitution = 0.05f;
 
+		// set collision filter data
+		wallBoxDef.filter.categoryBits = 0x0001;
+		wallBoxDef.filter.maskBits = -1;
+
 		// register the fixture with box2d
 		wallBody->CreateFixture(&wallBoxDef);
 	}
@@ -36,12 +44,22 @@ Environment::~Environment() {}
 void Environment::render(sf::RenderWindow& window) {
 	maze.render(window);
 
-	tank.render(window);
+	player1.render(window);
+	player2.render(window);
+
 	ui.render(window);
 }
 
 void Environment::tick() {
 	ui.tick(this);
 
-	tank.tick(world);
+	player1.move();
+	player2.move();
+
+	// simulate the box2d world - this calculates collisions for us
+	world->Step(1.f / Environment::TPS, 10, 10);
+	
+	// update the player positions
+	player1.tick(world);
+	player2.tick(world);
 }

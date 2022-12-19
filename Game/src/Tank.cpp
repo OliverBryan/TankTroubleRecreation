@@ -7,7 +7,11 @@
 
 #include <Log.hpp>
 
-Tank::Tank() : position(sf::Vector2f(300.f, 100.f)) {
+Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys) {
+	// make sure keys are valid
+	if (keys.size() != 4)
+		throw std::runtime_error("Invalid keybinds for tank");
+
 	// set the texture of the sprite
 	sprite.setTexture(Resources::getResource("tank"));
 
@@ -15,6 +19,9 @@ Tank::Tank() : position(sf::Vector2f(300.f, 100.f)) {
 	sf::FloatRect spriteBounds = sprite.getLocalBounds();
 	sprite.setOrigin(sf::Vector2f(spriteBounds.left + (spriteBounds.width - 8) / 2.0f, spriteBounds.top + spriteBounds.height / 2.0f));
 	sprite.setPosition(position);
+
+	// set the color of the tank
+	sprite.setColor(spriteColor);
 
 	// repreat the same operation on the bounds
 	bounds.setSize(sf::Vector2f(spriteBounds.width - 8, spriteBounds.height));
@@ -33,14 +40,14 @@ void Tank::render(sf::RenderWindow& window) {
 		window.draw(bounds);
 }
 
-void Tank::tick(b2World* world) {
+void Tank::move() {
 	// turn the tank if the correct keys are pressed
 	// turning and other movement is done by setting linear and angular velocities
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+	if (sf::Keyboard::isKeyPressed(keys[2])) {
 		tankBody->SetAngularVelocity(-3.87463);
 		angle -= 3.7;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	else if (sf::Keyboard::isKeyPressed(keys[3])) {
 		tankBody->SetAngularVelocity(3.87463f);
 		angle += 3.7;
 	}
@@ -50,15 +57,14 @@ void Tank::tick(b2World* world) {
 	velocity = sf::Vector2f(1.386f * cos(angle * (3.141592653589793 / 180.0)), 1.386f * sin(angle * (3.141592653589793 / 180.0)));
 
 	// move the tank if the correct keys are pressed
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (sf::Keyboard::isKeyPressed(keys[0]))
 		tankBody->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	else if (sf::Keyboard::isKeyPressed(keys[1]))
 		tankBody->SetLinearVelocity(b2Vec2(-velocity.x, -velocity.y));
 	else tankBody->SetLinearVelocity(b2Vec2(0.f, 0.f));
+}
 
-	// simulate the box2d world - this calculates collisions for us
-	world->Step(1.f / Environment::TPS, 10, 10);
-
+void Tank::tick(b2World* world) {
 	// fetch the tank's new position and angle
 	auto p = tankBody->GetPosition();
 	position = sf::Vector2f(p.x, p.y) * 100.f;
@@ -71,7 +77,7 @@ void Tank::tick(b2World* world) {
 	bounds.setRotation(angle);
 }
 
-void Tank::setUpCollisions(b2World* world) {
+void Tank::setUpCollisions(b2World* world, uint16 index) {
 	// body definition
 	b2BodyDef tankBodyDef;
 	tankBodyDef.type = b2_dynamicBody;
@@ -79,7 +85,8 @@ void Tank::setUpCollisions(b2World* world) {
 
 	// fixed rotation makes movement more like the original game
 	bool fixedRotation = Config::getSetting("fixedRotation", true);
-	Log::logStatus(std::string("Fixed rotation is ") + (fixedRotation ? "enabled" : "disabled"), ConsoleColor::LightPurple);
+	if (index == 0x002)
+		Log::logStatus(std::string("Fixed rotation is ") + (fixedRotation ? "enabled" : "disabled"), ConsoleColor::LightPurple);
 	tankBodyDef.fixedRotation = fixedRotation;
 
 	// create the body
@@ -93,6 +100,14 @@ void Tank::setUpCollisions(b2World* world) {
 	b2FixtureDef tankFixtureDef;
 	tankFixtureDef.shape = &tankBox;
 	tankFixtureDef.density = 1.0f;
+	tankFixtureDef.filter.categoryBits = index;
+
+	// check if tanks should collide with each other (off by default)
+	bool tankCollision = Config::getSetting("tankCollisions", false);
+	if (index == 0x002)
+		Log::logStatus(std::string("Tank collisions are ") + (tankCollision ? "enabled" : "disabled"), ConsoleColor::LightPurple);
+	if (!tankCollision)
+		tankFixtureDef.filter.maskBits = 0x0001;
 
 	// register the fixture with the body
 	tankBody->CreateFixture(&tankFixtureDef);
