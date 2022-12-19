@@ -15,6 +15,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
+set(BOX2D_BUILD_UNIT_TESTS OFF)
+set(BOX2D_BUILD_TESTBED OFF)
+
 message("Fetching Box2D...")
 FetchContent_Declare(
 	Box2D
@@ -35,6 +38,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Log)
 
 set(BUILD_EXAMPLES OFF)
+set(BUILD_TESTS OFF)
 
 message("Fetching libconfig...")
 FetchContent_Declare(

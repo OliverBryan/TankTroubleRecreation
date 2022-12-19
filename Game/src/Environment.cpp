@@ -1,45 +1,40 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 
-Environment::Environment() : maze(Maze::loadMaze("./res/mazes/maze.dat")), world(new b2World(b2Vec2(0.0f, 0.0f))) { 
+Environment::Environment() : maze(Maze::loadMaze("./res/mazes/emptyMaze.dat")), world(new b2World(b2Vec2(0.0f, 0.0f))) {
+	// set up box2d with the tank
 	tank.setUpCollisions(world);
 
+	// add maze to box2d world
 	for (const auto& wall : maze.walls) {
+		// body definition
 		b2BodyDef wallBodyDef;
 		wallBodyDef.type = b2_staticBody;
 		wallBodyDef.position.Set((wall.getPosition().x + (wall.getSize().x / 2.f)) / 100.f, (wall.getPosition().y + (wall.getSize().y  / 2.f)) / 100.f);
 		
+		// create the body
 		b2Body* wallBody = world->CreateBody(&wallBodyDef);
 
+		// add fixture
 		b2FixtureDef wallBoxDef;
 		b2PolygonShape wallBox;
 		wallBox.SetAsBox(wall.getSize().x / 200.f, wall.getSize().y / 200.f);
 
+		// set physical properties
 		wallBoxDef.shape = &wallBox;
 		wallBoxDef.density = 0.0f;
 		wallBoxDef.friction = 0.9f;
 		wallBoxDef.restitution = 0.05f;
 
+		// register the fixture with box2d
 		wallBody->CreateFixture(&wallBoxDef);
 	}
 }
 
-Environment::~Environment() {};
+Environment::~Environment() {}
 
 void Environment::render(sf::RenderWindow& window) {
 	maze.render(window);
-
-	//auto body = world.GetBodyList();
-	//while (body != nullptr) {
-	//	auto cur = body;
-	//	body = body->GetNext();
-
-	//	if (cur->GetUserData().pointer != NULL) {
-	//		sf::Vector2f* userData = reinterpret_cast<sf::Vector2f*>(cur->GetUserData().pointer);
-	//		sf::RectangleShape rs(*userData);
-	//		//rs.setPosition(getPosition)
-	//	}
-	//}
 
 	tank.render(window);
 	ui.render(window);
@@ -48,5 +43,5 @@ void Environment::render(sf::RenderWindow& window) {
 void Environment::tick() {
 	ui.tick(this);
 
-	tank.tick(maze.walls, world);
+	tank.tick(world);
 }

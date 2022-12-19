@@ -1,12 +1,17 @@
 #include "Interface.hpp"
 #include "Environment.hpp"
+#include "Resources.hpp"
+
+#include <Log.hpp>
 
 Interface::Interface() {
+	// load font
 	if (!font.loadFromFile("./res/Roboto-Thin.ttf")) {
-		std::cout << "Error: could not load Roboto-Thin.ttf" << std::endl;
+		Log::logError("Error: could not load Roboto-Thin.ttf");
 		exit(-1);
 	}
 
+	// create sprites and text objects
 	greenTankSprite.setTexture(Resources::getResource("tank_side_green"));
 	redTankSprite.setTexture(Resources::getResource("tank_side_red"));
 
@@ -26,5 +31,5 @@ void Interface::render(sf::RenderWindow& window) {
 }
 
 void Interface::tick(Environment* env) {
-
+	// TODO
 }

@@ -1,11 +1,14 @@
 #include "Config.hpp"
 #include <Log.hpp>
 
+// Static member variables
 libconfig::Config Config::cfg;
+bool Config::initialized = false;
 
 void Config::init() {
     Log::logStatus("Loading settings.cfg...", ConsoleColor::DarkBlue);
 
+    // As of now, a failure to load settings.cfg is a complete failure, this will change later
     try {
         cfg.readFile("./res/settings.cfg");
     }
@@ -19,4 +22,6 @@ void Config::init() {
     }
 
     Log::logStatus("Settings.cfg loaded", ConsoleColor::DarkBlue);
+
+    initialized = true;
 }

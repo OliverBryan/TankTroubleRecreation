@@ -5,12 +5,20 @@
 
 class Environment;
 
+// Manages the user interface
 class Interface {
 public:
 	Interface();
 
+	/// <summary>
+	/// Draw user interface
+	/// </summary>
+	/// <param name="window">Target window</param>
 	void render(sf::RenderWindow& window);
 
+	/// <summary>
+	/// Update the interface
+	/// </summary>
 	void tick(Environment* env);
 
 private:
