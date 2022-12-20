@@ -54,6 +54,11 @@ private:
 	};
 
 	std::vector<Bullet> bullets;
+
+	// settings
+	bool infiniteBulletTime = false; // should bullets expire
+	bool bulletCollisions = false; // should bullets collide with themselves
+	unsigned int bulletTime = 10;
 };
 
 
