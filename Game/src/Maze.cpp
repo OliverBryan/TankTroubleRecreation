@@ -50,7 +50,7 @@ Maze Maze::loadMaze(const std::string& fileName) {
 			// split by space
 			std::copy(std::istream_iterator<std::string>(iss),
 				std::istream_iterator<std::string>(),
-				back_inserter(tokens));
+				std::back_inserter(tokens));
 
 			// wall shape
 			int x, y;

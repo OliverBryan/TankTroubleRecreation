@@ -24,6 +24,13 @@ public:
 	/// </summary>
 	void tick();
 
+	/// <summary>
+	/// spawns a bullet at the given position with the given velocity
+	/// </summary>
+	/// <param name="position">position of the bullet</param>
+	/// <param name="velocity">velocity of the bullet</param>
+	void createBullet(const sf::Vector2f& position, const sf::Vector2f& velocity);
+
 	// Tickrate of the environment
 	static constexpr float TPS = 60.0f;
 
@@ -38,6 +45,15 @@ private:
 	Interface ui;
 
 	Maze maze;
+
+	struct Bullet {
+		int timer;
+		b2Body* body;
+
+		sf::CircleShape shape;
+	};
+
+	std::vector<Bullet> bullets;
 };
 
 

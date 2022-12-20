@@ -5,6 +5,7 @@
 #include <box2d/box2d.h>
 
 class Maze;
+class Environment;
 
 // Represents a player controlled tank
 class Tank {
@@ -27,7 +28,8 @@ public:
 	/// Update the tank based on the results of b2World::Step
 	/// </summary>
 	/// <param name="world">box2d world</param>
-	void tick(b2World* world);
+	/// <param name="env">Environment</param>
+	void tick(b2World* world, Environment* env);
 
 	/// <summary>
 	/// Get the AABB of the tank
@@ -72,6 +74,7 @@ private:
 	// index 0 is forward, 1 is backwards, 2 is left, and 3 is right
 	// for example, the arrow keys would be {up, down, left, right} and WASD would be {w, s, a, d}
 	std::vector<sf::Keyboard::Key> keys;
+	bool fireKeyDown = false;
 };
 
 #endif /* TANK_HPP */

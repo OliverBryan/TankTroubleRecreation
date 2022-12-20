@@ -7,9 +7,11 @@
 
 #include <Log.hpp>
 
+// bullet time = 10s
+
 Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys) {
 	// make sure keys are valid
-	if (keys.size() != 4)
+	if (keys.size() != 5)
 		throw std::runtime_error("Invalid keybinds for tank");
 
 	// set the texture of the sprite
@@ -54,7 +56,7 @@ void Tank::move() {
 	else tankBody->SetAngularVelocity(0.0f);
 
 	// calculate the linear velocity of the tank based on the angle
-	velocity = sf::Vector2f(1.386f * cos(angle * (3.141592653589793 / 180.0)), 1.386f * sin(angle * (3.141592653589793 / 180.0)));
+	velocity = 1.386f * sf::Vector2f(cos(angle * (3.141592653589793 / 180.0)), sin(angle * (3.141592653589793 / 180.0)));
 
 	// move the tank if the correct keys are pressed
 	if (sf::Keyboard::isKeyPressed(keys[0]))
@@ -64,7 +66,7 @@ void Tank::move() {
 	else tankBody->SetLinearVelocity(b2Vec2(0.f, 0.f));
 }
 
-void Tank::tick(b2World* world) {
+void Tank::tick(b2World* world, Environment* env) {
 	// fetch the tank's new position and angle
 	auto p = tankBody->GetPosition();
 	position = sf::Vector2f(p.x, p.y) * 100.f;
@@ -75,6 +77,22 @@ void Tank::tick(b2World* world) {
 	bounds.setPosition(position);
 	sprite.setRotation(angle);
 	bounds.setRotation(angle);
+
+	if (sf::Keyboard::isKeyPressed(keys[4]) && !fireKeyDown) {
+		// fire
+		fireKeyDown = true;
+
+		auto& dir = sf::Vector2f(cos(angle * (3.141592653589793 / 180.0)), sin(angle * (3.141592653589793 / 180.0)));
+		auto& v = 234.f * dir;
+
+		// 34 by 21
+		// local center = <13, 10.5>
+		// target position = center + 21 * unit vector in direction of angle
+
+		env->createBullet(position + 21.f * dir, v);
+	}
+	else if (!sf::Keyboard::isKeyPressed(keys[4]))
+		fireKeyDown = false;
 }
 
 void Tank::setUpCollisions(b2World* world, uint16 index) {
@@ -104,10 +122,10 @@ void Tank::setUpCollisions(b2World* world, uint16 index) {
 
 	// check if tanks should collide with each other (off by default)
 	bool tankCollision = Config::getSetting("tankCollisions", false);
-	if (index == 0x002)
+	if (index == 0x003)
 		Log::logStatus(std::string("Tank collisions are ") + (tankCollision ? "enabled" : "disabled"), ConsoleColor::LightPurple);
 	if (!tankCollision)
-		tankFixtureDef.filter.maskBits = 0x0001;
+		tankFixtureDef.filter.maskBits = (0x0001 | 0x0002);
 
 	// register the fixture with the body
 	tankBody->CreateFixture(&tankFixtureDef);
