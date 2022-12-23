@@ -46,6 +46,9 @@ private:
 	Tank player1;
 	Tank player2;
 
+	// registers the walls with box2d
+	void registerWalls();
+
 	// box2d world is used to compute collisions and the movement of tanks and bullets
 	// everything is scaled down by 100 to keep box2d from crapping itself
 	b2World* world;

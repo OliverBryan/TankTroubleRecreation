@@ -23,7 +23,7 @@ public:
 				bullet->SetLinearVelocity(b2Vec2(vel.x, -vel.y));
 			else bullet->SetLinearVelocity(b2Vec2(-vel.x, vel.y));
 
-			bullet->GetUserData().pointer = 2;
+			bullet->GetUserData().pointer = 1;
 		}
 	}
 	
@@ -61,13 +61,28 @@ Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat"))
 	world->SetContactListener(new ContactListener());
 
 	// add maze to box2d world
+	registerWalls();
+
+	infiniteBulletTime = Config::getSetting("infiniteBulletTime", false);
+	Log::logStatus(std::string("Infinite bullet time is ") + (infiniteBulletTime ? "enabled" : "disabled"), ConsoleColor::LightPurple);
+
+	bulletCollisions = Config::getSetting("bulletCollisions", false);
+	Log::logStatus(std::string("Bullets do ") + (bulletCollisions ? "" : "not ") + "collide with each other", ConsoleColor::LightPurple);
+
+	bulletTime = Config::getSetting("bulletTime", 10);
+	Log::logStatus(std::string("Bullets last for ") + std::to_string(bulletTime) + " seconds", ConsoleColor::LightPurple);
+}
+
+Environment::~Environment() {}
+
+void Environment::registerWalls() {
 	for (const auto& wall : maze.walls) {
 		// body definition
 		b2BodyDef wallBodyDef;
 		wallBodyDef.type = b2_staticBody;
-		wallBodyDef.position.Set((wall.getPosition().x + (wall.getSize().x / 2.f)) / 100.f, (wall.getPosition().y + (wall.getSize().y  / 2.f)) / 100.f);
+		wallBodyDef.position.Set((wall.getPosition().x + (wall.getSize().x / 2.f)) / 100.f, (wall.getPosition().y + (wall.getSize().y / 2.f)) / 100.f);
 		wallBodyDef.userData.pointer = reinterpret_cast<uintptr_t>(&wall.getSize());
-		
+
 		// create the body
 		b2Body* wallBody = world->CreateBody(&wallBodyDef);
 
@@ -89,18 +104,7 @@ Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat"))
 		// register the fixture with box2d
 		wallBody->CreateFixture(&wallBoxDef);
 	}
-
-	infiniteBulletTime = Config::getSetting("infiniteBulletTime", false);
-	Log::logStatus(std::string("Infinite bullet time is ") + (infiniteBulletTime ? "enabled" : "disabled"), ConsoleColor::LightPurple);
-
-	bulletCollisions = Config::getSetting("bulletCollisions", false);
-	Log::logStatus(std::string("Bullets do ") + (bulletCollisions ? "" : "not ") + "collide with each other", ConsoleColor::LightPurple);
-
-	bulletTime = Config::getSetting("bulletTime", 10);
-	Log::logStatus(std::string("Bullets last for ") + std::to_string(bulletTime) + " seconds", ConsoleColor::LightPurple);
 }
-
-Environment::~Environment() {}
 
 void Environment::render(sf::RenderWindow& window) {
 	maze.render(window);
@@ -145,30 +149,6 @@ void Environment::tick() {
 			i--;
 		}
 	}
-
-	//for (b2Contact* contact = world->GetContactList(); contact; contact = contact->GetNext()) {
-	//	if (contact->IsTouching() && contact->GetFixtureA()->GetBody()->GetUserData().pointer != NULL || contact->GetFixtureB()->GetBody()->GetUserData().pointer != NULL) {
-	//		sf::Vector2f* sizeData = nullptr;
-	//		b2Body* bullet = nullptr;
-
-	//		if (contact->GetFixtureA()->GetBody()->GetUserData().pointer != NULL) {
-	//			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
-	//			bullet = contact->GetFixtureB()->GetBody();
-	//		}
-	//		else {
-	//			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
-	//			bullet = contact->GetFixtureA()->GetBody();
-	//		}
-
-	//		// if sizeData is still null something very not good has happened so naturally we just ignore it
-	//		if (sizeData) {
-	//			auto& vel = bullet->GetLinearVelocity();
-	//			if (sizeData->x > sizeData->y)
-	//				bullet->SetLinearVelocity(b2Vec2(vel.x, -vel.y));
-	//			else bullet->SetLinearVelocity(b2Vec2(-vel.x, vel.y));
-	//		}
-	//	}
-	//}
 }
 
 void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f& velocity) {
