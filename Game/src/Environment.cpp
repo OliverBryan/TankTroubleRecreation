@@ -1,6 +1,55 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 
+// TODO: move this to its own file
+class ContactListener : public b2ContactListener {
+public:
+	void BeginContact(b2Contact* contact) override {
+		if (!validCollision(contact))
+			return;
+
+		sf::Vector2f* sizeData = nullptr;
+		b2Body* bullet = nullptr;
+
+		setData(contact, sizeData, bullet);
+
+		if (bullet->GetUserData().pointer != 0)
+			return;
+
+		// if sizeData is still null something very not good has happened so naturally we just ignore it
+		if (sizeData) {
+			const b2Vec2& vel = bullet->GetLinearVelocity();
+			if (sizeData->x > sizeData->y)
+				bullet->SetLinearVelocity(b2Vec2(vel.x, -vel.y));
+			else bullet->SetLinearVelocity(b2Vec2(-vel.x, vel.y));
+
+			bullet->GetUserData().pointer = 2;
+		}
+	}
+	
+private:
+	void setData(b2Contact* contact, sf::Vector2f*& sizeData, b2Body*& bullet) {
+		if (contact->GetFixtureA()->GetBody()->GetUserData().pointer != NULL) {
+			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+			bullet = contact->GetFixtureB()->GetBody();
+		}
+		else {
+			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
+			bullet = contact->GetFixtureA()->GetBody();
+		}
+	}
+
+	inline bool hasCategory(b2Contact* contact, uint16 category) {
+		return (contact->GetFixtureA()->GetFilterData().categoryBits == category || 
+				contact->GetFixtureB()->GetFilterData().categoryBits == category);
+	}
+
+	// a collision is only relevant here if it is between a bullet and a wall
+	bool validCollision(b2Contact* contact) {
+		return hasCategory(contact, 0x0001) && hasCategory(contact, 0x0002);
+	}
+};
+
 Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat")), 
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
 							 player1({sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::M}, sf::Color::Green),
@@ -9,12 +58,15 @@ Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat"))
 	player1.setUpCollisions(world, 0x0004);
 	player2.setUpCollisions(world, 0x0008);
 
+	world->SetContactListener(new ContactListener());
+
 	// add maze to box2d world
 	for (const auto& wall : maze.walls) {
 		// body definition
 		b2BodyDef wallBodyDef;
 		wallBodyDef.type = b2_staticBody;
 		wallBodyDef.position.Set((wall.getPosition().x + (wall.getSize().x / 2.f)) / 100.f, (wall.getPosition().y + (wall.getSize().y  / 2.f)) / 100.f);
+		wallBodyDef.userData.pointer = reinterpret_cast<uintptr_t>(&wall.getSize());
 		
 		// create the body
 		b2Body* wallBody = world->CreateBody(&wallBodyDef);
@@ -83,6 +135,8 @@ void Environment::tick() {
 		b.shape.setPosition(sf::Vector2f(pos.x, pos.y) * 100.f);
 		
 		b.timer--;
+		if (b.body->GetUserData().pointer > 0)
+			b.body->GetUserData().pointer--;
 		if (b.timer < 0 && !infiniteBulletTime) {
 			// delete the bullet if its timer is out
 			world->DestroyBody(b.body);
@@ -91,6 +145,30 @@ void Environment::tick() {
 			i--;
 		}
 	}
+
+	//for (b2Contact* contact = world->GetContactList(); contact; contact = contact->GetNext()) {
+	//	if (contact->IsTouching() && contact->GetFixtureA()->GetBody()->GetUserData().pointer != NULL || contact->GetFixtureB()->GetBody()->GetUserData().pointer != NULL) {
+	//		sf::Vector2f* sizeData = nullptr;
+	//		b2Body* bullet = nullptr;
+
+	//		if (contact->GetFixtureA()->GetBody()->GetUserData().pointer != NULL) {
+	//			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+	//			bullet = contact->GetFixtureB()->GetBody();
+	//		}
+	//		else {
+	//			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
+	//			bullet = contact->GetFixtureA()->GetBody();
+	//		}
+
+	//		// if sizeData is still null something very not good has happened so naturally we just ignore it
+	//		if (sizeData) {
+	//			auto& vel = bullet->GetLinearVelocity();
+	//			if (sizeData->x > sizeData->y)
+	//				bullet->SetLinearVelocity(b2Vec2(vel.x, -vel.y));
+	//			else bullet->SetLinearVelocity(b2Vec2(-vel.x, vel.y));
+	//		}
+	//	}
+	//}
 }
 
 void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f& velocity) {
@@ -112,13 +190,15 @@ void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f&
 	// physical properties
 	bulletFixtureDef.density = 1.f;
 	bulletFixtureDef.shape = &bulletShape;
-	bulletFixtureDef.restitution = 1;
+	bulletFixtureDef.restitution = 1.f;
+	bulletFixtureDef.isSensor = true;
 	
 	// collision data
 	bulletFixtureDef.filter.categoryBits = 0x0002;
 	bulletFixtureDef.filter.maskBits = (0x0001 | 0x0004 | 0x0008);
 	if (bulletCollisions)
 		bulletFixtureDef.filter.maskBits |= 0x0002; // |= operator somehow exists?
+	
 
 	b.body->CreateFixture(&bulletFixtureDef);
 
@@ -133,6 +213,8 @@ void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f&
 	cs.setPosition(position);
 	cs.setFillColor(sf::Color::Black);
 	b.shape = cs;
+
+	b.body->GetUserData().pointer = 0;
 
 	bullets.push_back(b);
 }

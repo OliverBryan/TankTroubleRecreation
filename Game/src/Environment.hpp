@@ -34,6 +34,14 @@ public:
 	// Tickrate of the environment
 	static constexpr float TPS = 60.0f;
 
+	// Represents a bullet in the world
+	struct Bullet {
+		int timer;
+		b2Body* body;
+
+		sf::CircleShape shape;
+	};
+
 private:
 	Tank player1;
 	Tank player2;
@@ -45,13 +53,6 @@ private:
 	Interface ui;
 
 	Maze maze;
-
-	struct Bullet {
-		int timer;
-		b2Body* body;
-
-		sf::CircleShape shape;
-	};
 
 	std::vector<Bullet> bullets;
 

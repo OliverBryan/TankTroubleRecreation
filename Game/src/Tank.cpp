@@ -9,6 +9,8 @@
 
 // bullet time = 10s
 
+// TODO: find some way to prevent tanks from shooting through walls
+
 Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys) {
 	// make sure keys are valid
 	if (keys.size() != 5)

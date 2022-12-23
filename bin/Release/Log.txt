@@ -1,10 +1,10 @@
-[2022-12-18.23:43:41]: Initializing Log
-[2022-12-18.23:43:41]: Loading settings.cfg...
-[2022-12-18.23:43:41]: Settings.cfg loaded
-[2022-12-18.23:43:41]: VSync is enabled
-[2022-12-18.23:43:41]: Fixed rotation is enabled
-[2022-12-18.23:43:42]: FPS: 140
-[2022-12-18.23:43:43]: FPS: 146
-[2022-12-18.23:43:44]: FPS: 145
-[2022-12-18.23:43:45]: FPS: 146
-[2022-12-18.23:43:46]: FPS: 146
+[2022-12-22.19:21:04]: Initializing Log
+[2022-12-22.19:21:04]: Loading settings.cfg...
+[2022-12-22.19:21:04]: Settings.cfg loaded
+[2022-12-22.19:21:04]: VSync is enabled
+[2022-12-22.19:21:04]: Infinite bullet time is disabled
+[2022-12-22.19:21:04]: Bullets do not collide with each other
+[2022-12-22.19:21:04]: Bullets last for 10 seconds
+[2022-12-22.19:21:05]: FPS: 59
+[2022-12-22.19:21:06]: FPS: 61
+[2022-12-22.19:21:07]: FPS: 61
