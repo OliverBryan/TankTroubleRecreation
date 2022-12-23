@@ -199,7 +199,6 @@ void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f&
 	if (bulletCollisions)
 		bulletFixtureDef.filter.maskBits |= 0x0002; // |= operator somehow exists?
 	
-
 	b.body->CreateFixture(&bulletFixtureDef);
 
 	// set the velocity
@@ -210,6 +209,7 @@ void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f&
 	
 	// shape for rendering
 	sf::CircleShape cs(2.f);
+	cs.setOrigin(sf::Vector2f(1.f, 1.f));
 	cs.setPosition(position);
 	cs.setFillColor(sf::Color::Black);
 	b.shape = cs;

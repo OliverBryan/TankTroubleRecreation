@@ -5,7 +5,7 @@ include(FetchContent)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(SFML_BUILD_AUDIO FALSE)
+set(SFML_BUILD_AUDIO False)
 
 message("Fetching SFML...")
 FetchContent_Declare(
@@ -54,7 +54,7 @@ add_executable(Game ./src/Environment.cpp ./src/Environment.hpp
 			    ./src/Resources.cpp ./src/Resources.hpp
   			    ./src/Tank.cpp ./src/Tank.hpp
 			    ./src/Config.cpp ./src/Config.hpp)
-target_link_libraries(Game sfml-graphics sfml-network box2d Log libconfig++)
+target_link_libraries(Game PRIVATE sfml-graphics sfml-network box2d Log libconfig++)
 
 # copy dlls post build
 if(WIN32)
