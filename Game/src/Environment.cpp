@@ -1,6 +1,10 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 
+// Due to collision behaviour with bullets and walls, sometimes a bullet will reflect back at the tank
+// when shot at a corner where it should not logically reflect. This may or may not be fixed later
+// TODO: fix above if possible
+
 // TODO: move this to its own file
 class ContactListener : public b2ContactListener {
 public:
@@ -13,8 +17,13 @@ public:
 
 		setData(contact, sizeData, bullet);
 
-		if (bullet->GetUserData().pointer != 0)
+		// this is null if this is the first recorded collision
+		const auto& previousCollision = getPreviousCollision(bullet);
+
+		// we don't want to do anything if the walls have the same orientation (to prevent phasing)
+		if (previousCollision.bulletBody != nullptr && isSameOrientation(sizeData, previousCollision.wallSize))
 			return;
+		// if the walls have different orientations we process the collision as normal
 
 		// if sizeData is still null something very not good has happened so naturally we just ignore it
 		if (sizeData) {
@@ -23,12 +32,35 @@ public:
 				bullet->SetLinearVelocity(b2Vec2(vel.x, -vel.y));
 			else bullet->SetLinearVelocity(b2Vec2(-vel.x, vel.y));
 
-			bullet->GetUserData().pointer = 1;
+			frameCollisionInfo.push_back({bullet, sizeData});
 		}
+	}
+
+	void resetCollisionInfo() {
+		frameCollisionInfo.clear();
 	}
 	
 private:
-	void setData(b2Contact* contact, sf::Vector2f*& sizeData, b2Body*& bullet) {
+	struct CollisionInfo {
+		b2Body* bulletBody;
+		sf::Vector2f* wallSize;
+	};
+
+	std::vector<CollisionInfo> frameCollisionInfo;
+
+	// this assumes no walls are square
+	const bool isSameOrientation(const sf::Vector2f* wallA, const sf::Vector2f* wallB) const {
+		return (wallA->x > wallA->y && wallB->x > wallB->y) || (wallA->y > wallA->x && wallB->y > wallB->x);
+	}
+
+	const CollisionInfo getPreviousCollision(b2Body* bullet) const {
+		for (const auto& info : frameCollisionInfo)
+			if (info.bulletBody == bullet)
+				return info;
+		return {nullptr, nullptr};
+	}
+
+	void setData(b2Contact* contact, sf::Vector2f*& sizeData, b2Body*& bullet) const {
 		if (contact->GetFixtureA()->GetBody()->GetUserData().pointer != NULL) {
 			sizeData = reinterpret_cast<sf::Vector2f*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
 			bullet = contact->GetFixtureB()->GetBody();
@@ -39,13 +71,13 @@ private:
 		}
 	}
 
-	inline bool hasCategory(b2Contact* contact, uint16 category) {
+	inline const bool hasCategory(b2Contact* contact, uint16 category) const {
 		return (contact->GetFixtureA()->GetFilterData().categoryBits == category || 
 				contact->GetFixtureB()->GetFilterData().categoryBits == category);
 	}
 
 	// a collision is only relevant here if it is between a bullet and a wall
-	bool validCollision(b2Contact* contact) {
+	const bool validCollision(b2Contact* contact) const {
 		return hasCategory(contact, 0x0001) && hasCategory(contact, 0x0002);
 	}
 };
@@ -58,7 +90,8 @@ Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat"))
 	player1.setUpCollisions(world, 0x0004);
 	player2.setUpCollisions(world, 0x0008);
 
-	world->SetContactListener(new ContactListener());
+	listener = new ContactListener();
+	world->SetContactListener(listener);
 
 	// add maze to box2d world
 	registerWalls();
@@ -73,7 +106,9 @@ Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat"))
 	Log::logStatus(std::string("Bullets last for ") + std::to_string(bulletTime) + " seconds", ConsoleColor::LightPurple);
 }
 
-Environment::~Environment() {}
+Environment::~Environment() {
+	delete listener;
+}
 
 void Environment::registerWalls() {
 	for (const auto& wall : maze.walls) {
@@ -149,6 +184,8 @@ void Environment::tick() {
 			i--;
 		}
 	}
+
+	listener->resetCollisionInfo();
 }
 
 void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f& velocity) {

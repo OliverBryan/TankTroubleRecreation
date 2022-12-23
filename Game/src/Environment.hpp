@@ -7,6 +7,8 @@
 
 // TODO: render to sf::RenderTarget instead of sf::RenderWindow
 
+class ContactListener;
+
 // Manages all game objects
 class Environment {
 public:
@@ -52,6 +54,7 @@ private:
 	// box2d world is used to compute collisions and the movement of tanks and bullets
 	// everything is scaled down by 100 to keep box2d from crapping itself
 	b2World* world;
+	ContactListener* listener;
 
 	Interface ui;
 
