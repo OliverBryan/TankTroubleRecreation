@@ -7,10 +7,6 @@
 
 #include <Log.hpp>
 
-// bullet time = 10s
-
-// TODO: find some way to prevent tanks from shooting through walls
-
 Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys) {
 	// make sure keys are valid
 	if (keys.size() != 5)
@@ -122,15 +118,36 @@ void Tank::setUpCollisions(b2World* world, uint16 index) {
 	tankFixtureDef.density = 1.0f;
 	tankFixtureDef.filter.categoryBits = index;
 
+	// create fixture def for the front of the tank
+	// this must be done seperately because box2d does not support concave polygons
+	b2FixtureDef tankFrontFixtureDef;
+
+	// 34 by 21
+	b2PolygonShape tankFrontBox;
+	b2Vec2 points[4] = {
+		b2Vec2(13.f / 100.f, -4 / 100.f),
+		b2Vec2(21.f / 100.f, -4 / 100.f),
+		b2Vec2(21.f / 100.f, 4 / 100.f),
+		b2Vec2(13.f / 100.f, 4 / 100.f)
+	};
+	tankFrontBox.Set(points, 4);
+	
+	tankFrontFixtureDef.shape = &tankFrontBox;
+	tankFrontFixtureDef.density = 1.0f;
+	tankFrontFixtureDef.filter.categoryBits = index;
+
 	// check if tanks should collide with each other (off by default)
 	bool tankCollision = Config::getSetting("tankCollisions", false);
 	if (index == 0x003)
 		Log::logStatus(std::string("Tank collisions are ") + (tankCollision ? "enabled" : "disabled"), ConsoleColor::LightPurple);
-	if (!tankCollision)
+	if (!tankCollision) {
 		tankFixtureDef.filter.maskBits = (0x0001 | 0x0002);
+		tankFrontFixtureDef.filter.maskBits = (0x0001 | 0x0002);
+	}
 
 	// register the fixture with the body
 	tankBody->CreateFixture(&tankFixtureDef);
+	tankBody->CreateFixture(&tankFrontFixtureDef);
 }
 
 sf::Vector2f Tank::getPosition() {

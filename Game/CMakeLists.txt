@@ -48,12 +48,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libconfig)
 
-add_executable(Game ./src/Environment.cpp ./src/Environment.hpp 
+add_executable(Game ./src/Collisions.cpp ./src/Collisions.hpp
+			    ./src/Config.cpp ./src/Config.hpp
+			    ./src/Environment.cpp ./src/Environment.hpp 
 			    ./src/Interface.cpp ./src/Interface.hpp
 			    ./src/Main.cpp ./src/Maze.cpp ./src/Maze.hpp
 			    ./src/Resources.cpp ./src/Resources.hpp
-  			    ./src/Tank.cpp ./src/Tank.hpp
-			    ./src/Config.cpp ./src/Config.hpp)
+  			    ./src/Tank.cpp ./src/Tank.hpp)
 target_link_libraries(Game PRIVATE sfml-graphics sfml-network box2d Log libconfig++)
 
 # copy dlls post build
