@@ -2,16 +2,9 @@
 #define COLLISIONS_HPP
 
 #include <box2d/box2d.h>
+#include <SFML/Graphics.hpp>
 
 #include <vector>
-
-// forward declarations
-namespace sf {
-	template <class T>
-	class Vector2;
-
-	using Vector2f = Vector2<float>;
-};
 
 class ContactListener : public b2ContactListener {
 public:
@@ -21,18 +14,21 @@ public:
 private:
 	struct CollisionInfo {
 		b2Body* bulletBody;
-		sf::Vector2f* wallSize;
+		sf::FloatRect wallBounds;
 	};
 
 	std::vector<CollisionInfo> frameCollisionInfo;
 
 	// helper functions
 	// TODO: comment
-	const bool isSameOrientation(const sf::Vector2f* wallA, const sf::Vector2f* wallB) const;
-	const CollisionInfo getPreviousCollision(b2Body* bullet) const;
-	void setData(b2Contact* contact, sf::Vector2f*& sizeData, b2Body*& bullet) const;
+	const CollisionInfo* getPreviousCollision(b2Body* bullet) const;
+	void setData(b2Contact* contact, sf::FloatRect& wallBounds, b2Body*& bullet) const;
+	void applyCollision(b2Body* bullet, const sf::FloatRect& wallBounds);
+	inline const bool isSameOrientation(const sf::FloatRect& wallA, const sf::FloatRect& wallB) const;
 	inline const bool hasCategory(b2Contact* contact, uint16 category) const;
-	const bool validCollision(b2Contact* contact) const;
+	inline const bool validCollision(b2Contact* contact) const;
+	inline const bool isInside(const sf::FloatRect& wallBounds, const sf::Vector2f& position) const;
+	inline const bool shouldCollideWithCorner(const sf::FloatRect& wallABounds, const sf::FloatRect& wallBBounds, const sf::Vector2f& bulletPosition) const;
 };
 
 #endif /* COLLISIONS_HPP */
