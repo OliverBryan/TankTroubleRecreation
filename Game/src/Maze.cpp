@@ -74,7 +74,7 @@ Maze Maze::loadMaze(const std::string& fileName) {
 				case 2:
 					// left wall - note that any number that evaluates to false will result in no wall existing
 					if (num) {
-						rs.setSize(sf::Vector2f(2.f, 62.f));
+						rs.setSize(sf::Vector2f(2.f, 64.f));
 						rs.setPosition(x * 62.f + 250.f, y * 62.f + 45.f);
 						walls.push_back(rs);
 					}

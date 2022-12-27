@@ -2,11 +2,6 @@
 #include "Config.hpp"
 #include "Collisions.hpp"
 
-
-// Due to collision behaviour with bullets and walls, sometimes a bullet will reflect back at the tank
-// when shot at a corner where it should not logically reflect. This may or may not be fixed later
-// TODO: fix above if possible
-
 Environment::Environment() : maze(Maze::loadMaze("./res/mazes/proper_maze.dat")), 
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
 							 player1({sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::M}, sf::Color::Green),
@@ -134,7 +129,7 @@ void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f&
 	bulletFixtureDef.shape = &bulletShape;
 	bulletFixtureDef.restitution = 1.f;
 	bulletFixtureDef.isSensor = true;
-	
+
 	// collision data
 	bulletFixtureDef.filter.categoryBits = 0x0002;
 	bulletFixtureDef.filter.maskBits = (0x0001 | 0x0004 | 0x0008);

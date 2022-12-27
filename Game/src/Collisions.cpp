@@ -21,6 +21,7 @@ void ContactListener::BeginContact(b2Contact* contact) {
 
 		sf::Vector2f bulletPosition(bullet->GetPosition().x * 100.f, bullet->GetPosition().y * 100.f);
 
+		// TODO: this still fails rarely, must be fixed
 		// if the walls have different orientations we check to see what type of corner it is
 		// if the bullet is inside the corner it should collide twice, otherwise it should only collide once
 		// we still must make sure that the "right" collision has already been done, and if it hasn't been done we must undo the results of the "wrong" collision
