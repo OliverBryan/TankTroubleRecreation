@@ -15,6 +15,8 @@ public:
 	/// <returns>Maze constructed from the input file</returns>
 	static Maze loadMaze(const std::string& fileName);
 
+	static Maze getRandomMaze();
+
 	/// <summary>
 	/// Construct a maze
 	/// </summary>

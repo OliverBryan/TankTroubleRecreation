@@ -66,6 +66,10 @@ private:
 	bool infiniteBulletTime = false; // should bullets expire
 	bool bulletCollisions = false; // should bullets collide with themselves
 	unsigned int bulletTime = 10;
+
+	// TEMPORARY
+	bool mazeSwitchKeyDown;
+	// TEMPORARY
 };
 
 

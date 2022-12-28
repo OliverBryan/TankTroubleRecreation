@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <random>
+#include <filesystem>
 
 #include <Log.hpp>
 
@@ -103,4 +105,23 @@ Maze Maze::loadMaze(const std::string& fileName) {
 		Log::logError("Error: could not open " + fileName);
 		exit(-1);
 	}
+}
+
+int irand(int min, int max) {
+	std::random_device rd;
+	std::mt19937 gen{ rd() };
+	std::uniform_int_distribution<> dis{ min, max };
+
+	return dis(gen);
+}
+
+Maze Maze::getRandomMaze() {
+	std::vector<std::filesystem::path> mazePaths;
+
+	for (const auto& entry : std::filesystem::directory_iterator("./res/mazes"))
+		mazePaths.push_back(entry.path());
+
+	std::filesystem::path path = mazePaths[irand(0, mazePaths.size() - 1)];
+	Log::logStatus("Loading " + path.filename().string(), ConsoleColor::LightGreen);
+	return loadMaze(path.string());
 }
