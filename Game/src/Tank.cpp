@@ -94,6 +94,11 @@ void Tank::tick(b2World* world, Environment* env) {
 }
 
 void Tank::setUpCollisions(b2World* world, uint16 index) {
+	// reset position
+	position = sf::Vector2f(300.f, 100.f);
+	sprite.setPosition(position);
+	bounds.setPosition(position);
+
 	// body definition
 	b2BodyDef tankBodyDef;
 	tankBodyDef.type = b2_dynamicBody;

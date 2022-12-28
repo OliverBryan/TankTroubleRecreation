@@ -6,15 +6,11 @@ Environment::Environment() : maze(Maze::getRandomMaze()),
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
 							 player1({sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::M}, sf::Color::Green),
 							 player2({sf::Keyboard::E, sf::Keyboard::D, sf::Keyboard::S, sf::Keyboard::F, sf::Keyboard::Q}, sf::Color::Red) {
-	// set up box2d with the tank
-	player1.setUpCollisions(world, 0x0004);
-	player2.setUpCollisions(world, 0x0008);
+	// set up box2d state
+	resetState();
 
 	listener = new ContactListener();
 	world->SetContactListener(listener);
-
-	// add maze to box2d world
-	registerWalls();
 
 	infiniteBulletTime = Config::getSetting("infiniteBulletTime", false);
 	Log::logStatus(std::string("Infinite bullet time is ") + (infiniteBulletTime ? "enabled" : "disabled"), ConsoleColor::LightPurple);
@@ -61,6 +57,22 @@ void Environment::registerWalls() {
 	}
 }
 
+void Environment::resetState() {
+	b2Body* body = world->GetBodyList();
+	while (body) {
+		b2Body* b = body;
+		body = body->GetNext();
+		world->DestroyBody(b);
+	}
+
+	registerWalls();
+
+	player1.setUpCollisions(world, 0x0004);
+	player2.setUpCollisions(world, 0x0008);
+
+	bullets.clear();
+}
+
 void Environment::render(sf::RenderWindow& window) {
 	maze.render(window);
 
@@ -78,8 +90,11 @@ void Environment::tick() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && !mazeSwitchKeyDown) {
 		maze = Maze::getRandomMaze();
 		mazeSwitchKeyDown = true;
+
+		resetState();
+		return;
 	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::O) && mazelSwitchKeyDown)
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::O) && mazeSwitchKeyDown)
 		mazeSwitchKeyDown = false;
 	// TEMPORARY
 

@@ -51,6 +51,10 @@ private:
 	// registers the walls with box2d
 	void registerWalls();
 
+	// should be called after the maze is changed
+	// resets box2d state (deletes all objects and adds walls and tanks)
+	void resetState();
+
 	// box2d world is used to compute collisions and the movement of tanks and bullets
 	// everything is scaled down by 100 to keep box2d from crapping itself
 	b2World* world;
@@ -68,7 +72,7 @@ private:
 	unsigned int bulletTime = 10;
 
 	// TEMPORARY
-	bool mazeSwitchKeyDown;
+	bool mazeSwitchKeyDown = false;
 	// TEMPORARY
 };
 
