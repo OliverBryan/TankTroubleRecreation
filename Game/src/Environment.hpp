@@ -74,6 +74,8 @@ private:
 	// TEMPORARY
 	bool mazeSwitchKeyDown = false;
 	// TEMPORARY
+
+	friend class Interface;
 };
 
 

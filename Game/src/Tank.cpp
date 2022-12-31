@@ -7,7 +7,7 @@
 
 #include <Log.hpp>
 
-Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys) {
+Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys), score(0) {
 	// make sure keys are valid
 	if (keys.size() != 5)
 		throw std::runtime_error("Invalid keybinds for tank");
@@ -33,7 +33,7 @@ Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteCo
 	drawBounds = Config::getSetting("drawBounds", false);
 }
 
-void Tank::render(sf::RenderWindow& window) {
+void Tank::render(sf::RenderWindow& window) const {
 	window.draw(sprite);
 
 	if (drawBounds)
@@ -155,14 +155,22 @@ void Tank::setUpCollisions(b2World* world, uint16 index) {
 	tankBody->CreateFixture(&tankFrontFixtureDef);
 }
 
-sf::Vector2f Tank::getPosition() {
+sf::Vector2f Tank::getPosition() const {
 	return position;
 }
 
-float Tank::getAngle() {
+float Tank::getAngle() const {
 	return angle;
 }
 
-sf::FloatRect Tank::getBounds() {
+sf::FloatRect Tank::getBounds() const {
 	return bounds.getGlobalBounds();
+}
+
+unsigned int Tank::getScore() const {
+	return score;
+}
+
+void Tank::incrementScore() {
+	score++;
 }

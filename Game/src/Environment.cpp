@@ -88,11 +88,10 @@ void Environment::render(sf::RenderWindow& window) {
 void Environment::tick() {
 	// TEMPORARY
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && !mazeSwitchKeyDown) {
-		maze = Maze::getRandomMaze();
-		mazeSwitchKeyDown = true;
+		player1.incrementScore();
+		player2.incrementScore();
 
-		resetState();
-		return;
+		mazeSwitchKeyDown = true;
 	}
 	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::O) && mazeSwitchKeyDown)
 		mazeSwitchKeyDown = false;

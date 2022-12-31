@@ -17,7 +17,7 @@ public:
 	/// Draw the tank
 	/// </summary>
 	/// <param name="window">Target window</param>
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window) const;
 
 	/// <summary>
 	/// Move the tank based on input, meant to be called during Environment::tick but before b2World::Step is called
@@ -35,7 +35,7 @@ public:
 	/// Get the AABB of the tank
 	/// </summary>
 	/// <returns>sf::FloatRect representing the AABB of the tank</returns>
-	sf::FloatRect getBounds();
+	sf::FloatRect getBounds() const;
 
 	/// <summary>
 	/// Registers the tank in the box2d world. This must be called before the game starts
@@ -48,13 +48,24 @@ public:
 	/// Get the position of the tank
 	/// </summary>
 	/// <returns>sf::Vector2f representing the position of the tank</returns>
-	sf::Vector2f getPosition();
+	sf::Vector2f getPosition() const;
 
 	/// <summary>
 	/// Get the angle of the tank, which is kept in degrees and is counterclockwise looking at the screen
 	/// </summary>
 	/// <returns>float representing the angle of the tank in degrees</returns>
-	float getAngle();
+	float getAngle() const;
+
+	/// <summary>
+	/// Gett the score of the tank
+	/// </summary>
+	/// <returns>score of the tank</returns>
+	unsigned int getScore() const;
+	
+	/// <summary>
+	/// Increase the score of the tank by 1
+	/// </summary>
+	void incrementScore();
 
 private:
 	// member data - this is kept seperately from box2d so that it doesn't need to be checked every frame
@@ -75,6 +86,9 @@ private:
 	// for example, the arrow keys would be {up, down, left, right} and WASD would be {w, s, a, d}
 	std::vector<sf::Keyboard::Key> keys;
 	bool fireKeyDown = false;
+
+	// score data
+	unsigned int score;
 };
 
 #endif /* TANK_HPP */

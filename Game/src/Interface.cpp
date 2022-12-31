@@ -20,6 +20,18 @@ Interface::Interface() {
 
 	greenScore.setFont(font);
 	redScore.setFont(font);
+
+	greenScore.setFillColor(sf::Color::Black);
+	redScore.setFillColor(sf::Color::Black);
+
+	greenScore.setCharacterSize(24);
+	redScore.setCharacterSize(24);
+
+	greenScore.setPosition(690.f, 630.f);
+	redScore.setPosition(410.f, 630.f);
+
+	greenScore.setStyle(sf::Text::Bold);
+	redScore.setStyle(sf::Text::Bold);
 }
 
 void Interface::render(sf::RenderWindow& window) {
@@ -31,5 +43,6 @@ void Interface::render(sf::RenderWindow& window) {
 }
 
 void Interface::tick(Environment* env) {
-	// TODO
+	greenScore.setString(std::to_string(env->player1.getScore()));
+	redScore.setString(std::to_string(env->player2.getScore()));
 }
