@@ -2,6 +2,15 @@
 #define MAZE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <random>
+
+static int irand(int min, int max) {
+	std::random_device rd;
+	std::mt19937 gen{ rd() };
+	std::uniform_int_distribution<> dis{ min, max };
+
+	return dis(gen);
+}
 
 // TODO: fix funky copy stuff for loadMaze
 

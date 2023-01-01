@@ -40,11 +40,19 @@ public:
 	struct Bullet {
 		int timer;
 		b2Body* body;
+		bool firstCollide = false;
 
 		sf::CircleShape shape;
 	};
 
 private:
+	enum class State {
+		Alive, // both players are alive
+		Dead // one player has died
+	};
+	State state = State::Alive;
+	unsigned int stateChangeCounter = 0;
+
 	Tank player1;
 	Tank player2;
 
@@ -54,6 +62,8 @@ private:
 	// should be called after the maze is changed
 	// resets box2d state (deletes all objects and adds walls and tanks)
 	void resetState();
+
+	void handleDeath(Bullet& b, Tank& t, const std::string& playerName);
 
 	// box2d world is used to compute collisions and the movement of tanks and bullets
 	// everything is scaled down by 100 to keep box2d from crapping itself
@@ -70,10 +80,7 @@ private:
 	bool infiniteBulletTime = false; // should bullets expire
 	bool bulletCollisions = false; // should bullets collide with themselves
 	unsigned int bulletTime = 10;
-
-	// TEMPORARY
-	bool mazeSwitchKeyDown = false;
-	// TEMPORARY
+	unsigned int postRoundTime = 4;
 
 	friend class Interface;
 };

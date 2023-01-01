@@ -67,6 +67,19 @@ public:
 	/// </summary>
 	void incrementScore();
 
+	/// <summary>
+	/// Query if the tank is alive
+	/// </summary>
+	/// <returns>true if the tank is alive, false if it is not</returns>
+	bool isAlive();
+
+	/// <summary>
+	/// Kills the tank. This stops it from being rendered and removes its body from the box2d world.
+	/// Note that move() or tick() cannot be called until setupCollisions() is called again, doing so will result in UB
+	/// </summary>
+	/// <param name="world">box2d world to remove tank body from></param>
+	void kill(b2World* world);
+
 private:
 	// member data - this is kept seperately from box2d so that it doesn't need to be checked every frame
 	sf::Vector2f position;
@@ -89,6 +102,8 @@ private:
 
 	// score data
 	unsigned int score;
+
+	bool alive = true;
 };
 
 #endif /* TANK_HPP */

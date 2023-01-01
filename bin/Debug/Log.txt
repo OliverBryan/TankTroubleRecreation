@@ -1,24 +1,22 @@
-[2022-12-23.19:10:13]: Initializing Log
-[2022-12-23.19:10:13]: Loading settings.cfg...
-[2022-12-23.19:10:13]: Settings.cfg loaded
-[2022-12-23.19:10:13]: VSync is enabled
-[2022-12-23.19:10:13]: Infinite bullet time is disabled
-[2022-12-23.19:10:13]: Bullets do not collide with each other
-[2022-12-23.19:10:13]: Bullets last for 10 seconds
-[2022-12-23.19:10:14]: FPS: 59
-[2022-12-23.19:10:15]: FPS: 61
-[2022-12-23.19:10:17]: FPS: 61
-[2022-12-23.19:10:18]: FPS: 61
-[2022-12-23.19:10:19]: FPS: 61
-[2022-12-23.19:10:20]: FPS: 61
-[2022-12-23.19:10:21]: FPS: 61
-[2022-12-23.19:10:22]: FPS: 61
-[2022-12-23.19:10:23]: FPS: 61
-[2022-12-23.19:10:24]: FPS: 61
-[2022-12-23.19:10:25]: FPS: 61
-[2022-12-23.19:10:26]: FPS: 61
-[2022-12-23.19:10:27]: FPS: 61
-[2022-12-23.19:10:28]: FPS: 61
-[2022-12-23.19:10:29]: FPS: 61
-[2022-12-23.19:10:30]: FPS: 61
-[2022-12-23.19:10:31]: FPS: 61
+[2022-12-31.21:17:55]: Initializing Log
+[2022-12-31.21:17:55]: Loading settings.cfg...
+[2022-12-31.21:17:55]: Settings.cfg loaded
+[2022-12-31.21:17:55]: VSync is enabled
+[2022-12-31.21:17:56]: Loading emptyMaze.dat
+[2022-12-31.21:17:56]: Loading maze.dat
+[2022-12-31.21:17:56]: Tank collisions are disabled
+[2022-12-31.21:17:56]: Infinite bullet time is disabled
+[2022-12-31.21:17:56]: Bullets do not collide with each other
+[2022-12-31.21:17:56]: Bullets last for 10 seconds
+[2022-12-31.21:17:56]: Rounds continue for 4 seconds after a player death
+[2022-12-31.21:17:57]: FPS: 58
+[2022-12-31.21:17:57]: Player 1 died
+[2022-12-31.21:17:57]: Player 2 died
+[2022-12-31.21:17:58]: FPS: 61
+[2022-12-31.21:17:59]: FPS: 61
+[2022-12-31.21:18:00]: FPS: 61
+[2022-12-31.21:18:01]: FPS: 61
+[2022-12-31.21:18:01]: Loading proper_maze.dat
+[2022-12-31.21:18:01]: Tank collisions are disabled
+[2022-12-31.21:18:02]: FPS: 61
+[2022-12-31.21:18:03]: FPS: 61

@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include <random>
 #include <filesystem>
 
 #include <Log.hpp>
@@ -85,7 +84,7 @@ Maze Maze::loadMaze(const std::string& fileName) {
 					// top wall
 					if (num) {
 						rs.setSize(sf::Vector2f(62.f, 2.f));
-						rs.setPosition(x * 62.f + 250.f , y * 62.f + 45.f);
+						rs.setPosition(x * 62.f + 250.f, y * 62.f + 45.f);
 						walls.push_back(rs);
 					}
 					break;
@@ -105,14 +104,6 @@ Maze Maze::loadMaze(const std::string& fileName) {
 		Log::logError("Error: could not open " + fileName);
 		exit(-1);
 	}
-}
-
-int irand(int min, int max) {
-	std::random_device rd;
-	std::mt19937 gen{ rd() };
-	std::uniform_int_distribution<> dis{ min, max };
-
-	return dis(gen);
 }
 
 Maze Maze::getRandomMaze() {

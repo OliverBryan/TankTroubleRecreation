@@ -4,6 +4,7 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 #include "Resources.hpp"
+#include "Collisions.hpp"
 
 #include <Log.hpp>
 
@@ -94,8 +95,11 @@ void Tank::tick(b2World* world, Environment* env) {
 }
 
 void Tank::setUpCollisions(b2World* world, uint16 index) {
-	// reset position
-	position = sf::Vector2f(300.f, 100.f);
+	// set to alive
+	alive = true;
+
+	// reset position to a random place
+	position = sf::Vector2f(static_cast<float>(irand(275, 775)), static_cast<float>(irand(75, 575)));
 	sprite.setPosition(position);
 	bounds.setPosition(position);
 
@@ -127,7 +131,6 @@ void Tank::setUpCollisions(b2World* world, uint16 index) {
 	// this must be done seperately because box2d does not support concave polygons
 	b2FixtureDef tankFrontFixtureDef;
 
-	// 34 by 21
 	b2PolygonShape tankFrontBox;
 	b2Vec2 points[4] = {
 		b2Vec2(13.f / 100.f, -4 / 100.f),
@@ -143,11 +146,11 @@ void Tank::setUpCollisions(b2World* world, uint16 index) {
 
 	// check if tanks should collide with each other (off by default)
 	bool tankCollision = Config::getSetting("tankCollisions", false);
-	if (index == 0x003)
+	if (index == collisions::Player1)
 		Log::logStatus(std::string("Tank collisions are ") + (tankCollision ? "enabled" : "disabled"), ConsoleColor::LightPurple);
 	if (!tankCollision) {
-		tankFixtureDef.filter.maskBits = (0x0001 | 0x0002);
-		tankFrontFixtureDef.filter.maskBits = (0x0001 | 0x0002);
+		tankFixtureDef.filter.maskBits = (collisions::Wall | collisions::Bullet);
+		tankFrontFixtureDef.filter.maskBits = (collisions::Wall | collisions::Bullet);
 	}
 
 	// register the fixture with the body
@@ -173,4 +176,14 @@ unsigned int Tank::getScore() const {
 
 void Tank::incrementScore() {
 	score++;
+}
+
+bool Tank::isAlive() {
+	return alive;
+}
+
+void Tank::kill(b2World* world) {
+	alive = false;
+
+	world->DestroyBody(tankBody);
 }

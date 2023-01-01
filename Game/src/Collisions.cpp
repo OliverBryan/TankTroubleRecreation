@@ -4,9 +4,24 @@
 #include <Log.hpp>
 
 void ContactListener::BeginContact(b2Contact* contact) {
-	if (!validCollision(contact))
-		return;
+	if (hasCategory(contact, collisions::Bullet) && hasCategory(contact, collisions::Wall))
+		handleBulletWallCollision(contact);
+	else if (hasCategory(contact, collisions::Bullet) && (hasCategory(contact, collisions::Player1) || hasCategory(contact, collisions::Player2)))
+		handleTankBulletCollision(contact);
+}
 
+void ContactListener::resetCollisionInfo() {
+	frameCollisionInfo.clear();
+	
+	player1Death = false;
+	player2Death = false;
+}
+
+std::pair<b2Body*, b2Body*> ContactListener::getDeaths() {
+	return std::make_pair(player1Death, player2Death);
+}
+
+void ContactListener::handleBulletWallCollision(b2Contact* contact) {
 	sf::FloatRect wallBounds;
 	b2Body* bullet = nullptr;
 
@@ -36,8 +51,22 @@ void ContactListener::BeginContact(b2Contact* contact) {
 	frameCollisionInfo.push_back({bullet, wallBounds});
 }
 
-void ContactListener::resetCollisionInfo() {
-	frameCollisionInfo.clear();
+void ContactListener::handleTankBulletCollision(b2Contact* contact) {
+	b2Body* bulletBody = nullptr;
+	const b2Body* tankBody = nullptr;
+
+	if (contact->GetFixtureA()->GetFilterData().categoryBits == collisions::Bullet) {
+		bulletBody = contact->GetFixtureA()->GetBody();
+		tankBody = contact->GetFixtureB()->GetBody();
+	}
+	else {
+		bulletBody = contact->GetFixtureB()->GetBody();
+		tankBody = contact->GetFixtureA()->GetBody();
+	}	
+
+	if (tankBody->GetFixtureList()->GetFilterData().categoryBits == collisions::Player1)
+		player1Death = bulletBody;
+	else player2Death = bulletBody;
 }
 
 const ContactListener::CollisionInfo* ContactListener::getPreviousCollision(b2Body* bullet) const {
@@ -80,14 +109,9 @@ inline const bool ContactListener::isSameOrientation(const sf::FloatRect& wallA,
 	return (wallA.width > wallA.height && wallB.width > wallB.height) || (wallA.height > wallA.width && wallB.height > wallB.width);
 }
 
-inline const bool ContactListener::hasCategory(b2Contact* contact, uint16 category) const {
+inline const bool ContactListener::hasCategory(b2Contact* contact, collisions::CollisionType category) const {
 	return (contact->GetFixtureA()->GetFilterData().categoryBits == category ||
 		contact->GetFixtureB()->GetFilterData().categoryBits == category);
-}
-
-inline const bool ContactListener::validCollision(b2Contact* contact) const {
-	// a collision is only relevant here if it is between a bullet and a wall
-	return hasCategory(contact, 0x0001) && hasCategory(contact, 0x0002);
 }
 
 inline const bool ContactListener::isInside(const sf::FloatRect& wallBounds, const sf::Vector2f& position) const {

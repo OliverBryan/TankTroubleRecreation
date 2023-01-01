@@ -20,6 +20,9 @@ Environment::Environment() : maze(Maze::getRandomMaze()),
 
 	bulletTime = Config::getSetting("bulletTime", 10);
 	Log::logStatus(std::string("Bullets last for ") + std::to_string(bulletTime) + " seconds", ConsoleColor::LightPurple);
+
+	postRoundTime = Config::getSetting("postRoundTime", 4);
+	Log::logStatus(std::string("Rounds continue for ") + std::to_string(postRoundTime) + " seconds after a player death", ConsoleColor::LightPurple);
 }
 
 Environment::~Environment() {
@@ -49,7 +52,7 @@ void Environment::registerWalls() {
 		wallBoxDef.restitution = 0.05f;
 
 		// set collision filter data
-		wallBoxDef.filter.categoryBits = 0x0001;
+		wallBoxDef.filter.categoryBits = collisions::Wall;
 		wallBoxDef.filter.maskBits = -1;
 
 		// register the fixture with box2d
@@ -58,6 +61,8 @@ void Environment::registerWalls() {
 }
 
 void Environment::resetState() {
+	maze = Maze::getRandomMaze();
+
 	b2Body* body = world->GetBodyList();
 	while (body) {
 		b2Body* b = body;
@@ -67,17 +72,20 @@ void Environment::resetState() {
 
 	registerWalls();
 
-	player1.setUpCollisions(world, 0x0004);
-	player2.setUpCollisions(world, 0x0008);
+	player1.setUpCollisions(world, collisions::Player1);
+	player2.setUpCollisions(world, collisions::Player2);
 
 	bullets.clear();
+
+	state = State::Alive;
+	stateChangeCounter = 0;
 }
 
 void Environment::render(sf::RenderWindow& window) {
 	maze.render(window);
 
-	player1.render(window);
-	player2.render(window);
+	if (player1.isAlive()) player1.render(window);
+	if (player2.isAlive()) player2.render(window);
 
 	ui.render(window);
 
@@ -85,32 +93,60 @@ void Environment::render(sf::RenderWindow& window) {
 		window.draw(b.shape);
 }
 
-void Environment::tick() {
-	// TEMPORARY
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && !mazeSwitchKeyDown) {
-		player1.incrementScore();
-		player2.incrementScore();
+// temporary: this will be moved to Environment
+void Environment::handleDeath(Bullet& b, Tank& t, const std::string& n) {
+	if (!b.firstCollide)
+		b.firstCollide = true;
+	else {
+		// death has occured
+		Log::logStatus("Player " + n + " died", ConsoleColor::Gold);
 
-		mazeSwitchKeyDown = true;
+		// kill the dead tank
+		t.kill(world);
+
+		// destroy the bullet by settings its timer to -1
+		b.timer = -1;
+
+		state = State::Dead;
 	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::O) && mazeSwitchKeyDown)
-		mazeSwitchKeyDown = false;
-	// TEMPORARY
+}
+
+void Environment::tick() {
+	bool p1Alive = player1.isAlive();
+	bool p2Alive = player2.isAlive();
+
+	if (state == State::Dead) {
+		stateChangeCounter++;
+
+		if (stateChangeCounter > TPS * postRoundTime) {
+			if (p1Alive) player1.incrementScore();
+			if (p2Alive) player2.incrementScore();
+
+			resetState();
+		}
+	}
 
 	ui.tick(this);
 
-	player1.move();
-	player2.move();
+	if (p1Alive) player1.move();
+	if (p2Alive) player2.move();
 
 	// simulate the box2d world - this calculates collisions for us
 	world->Step(1.f / Environment::TPS, 10, 10);
 	
 	// update the player positions
-	player1.tick(world, this);
-	player2.tick(world, this);
+	if (p1Alive) player1.tick(world, this);
+	if (p2Alive) player2.tick(world, this);
+
+	const auto& deaths = listener->getDeaths();
 
 	for (int i = 0; i < bullets.size(); i++) {
 		auto& b = bullets.at(i);
+
+		if (deaths.first && deaths.first == b.body)
+			handleDeath(b, player1, "1");
+		if (deaths.second && deaths.second == b.body)
+			handleDeath(b, player2, "2");
 
 		// update the bullets shape
 		auto& pos = b.body->GetPosition();
@@ -154,10 +190,10 @@ void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f&
 	bulletFixtureDef.isSensor = true;
 
 	// collision data
-	bulletFixtureDef.filter.categoryBits = 0x0002;
-	bulletFixtureDef.filter.maskBits = (0x0001 | 0x0004 | 0x0008);
+	bulletFixtureDef.filter.categoryBits = collisions::Bullet;
+	bulletFixtureDef.filter.maskBits = (collisions::Wall | collisions::Players);
 	if (bulletCollisions)
-		bulletFixtureDef.filter.maskBits |= 0x0002; // |= operator somehow exists?
+		bulletFixtureDef.filter.maskBits |= collisions::Bullet; // |= operator somehow exists?
 	
 	b.body->CreateFixture(&bulletFixtureDef);
 
