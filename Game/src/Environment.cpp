@@ -95,20 +95,16 @@ void Environment::render(sf::RenderWindow& window) {
 
 // temporary: this will be moved to Environment
 void Environment::handleDeath(Bullet& b, Tank& t, const std::string& n) {
-	if (!b.firstCollide)
-		b.firstCollide = true;
-	else {
-		// death has occured
-		Log::logStatus("Player " + n + " died", ConsoleColor::Gold);
+	// death has occured
+	Log::logStatus("Player " + n + " died", ConsoleColor::Gold);
 
-		// kill the dead tank
-		t.kill(world);
+	// kill the dead tank
+	t.kill(world);
 
-		// destroy the bullet by settings its timer to -1
-		b.timer = -1;
+	// destroy the bullet by settings its timer to -1
+	b.timer = -1;
 
-		state = State::Dead;
-	}
+	state = State::Dead;
 }
 
 void Environment::tick() {

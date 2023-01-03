@@ -86,9 +86,8 @@ void Tank::tick(b2World* world, Environment* env) {
 
 		// 34 by 21
 		// local center = <13, 10.5>
-		// target position = center + 21 * unit vector in direction of angle
-
-		env->createBullet(position + 21.f * dir, v);
+		// target position = center + 24.5 * unit vector in direction of angle
+		env->createBullet(position + 24.5f * dir, v);
 	}
 	else if (!sf::Keyboard::isKeyPressed(keys[4]))
 		fireKeyDown = false;
