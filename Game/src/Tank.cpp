@@ -8,7 +8,8 @@
 
 #include <Log.hpp>
 
-Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor) : position(sf::Vector2f(300.f, 100.f)), keys(keys), score(0) {
+Tank::Tank(std::size_t configIndex) : position(sf::Vector2f(300.f, 100.f)), score(0),
+	keys({Config::getPlayerKey("forward", configIndex), Config::getPlayerKey("back", configIndex), Config::getPlayerKey("left", configIndex), Config::getPlayerKey("right", configIndex), Config::getPlayerKey("fire", configIndex)}) {
 	// make sure keys are valid
 	if (keys.size() != 5)
 		throw std::runtime_error("Invalid keybinds for tank");
@@ -22,7 +23,7 @@ Tank::Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteCo
 	sprite.setPosition(position);
 
 	// set the color of the tank
-	sprite.setColor(spriteColor);
+	sprite.setColor(Config::getPlayerColor(configIndex));
 
 	// repreat the same operation on the bounds
 	bounds.setSize(sf::Vector2f(spriteBounds.width - 8, spriteBounds.height));

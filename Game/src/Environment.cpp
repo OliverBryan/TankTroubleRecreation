@@ -4,8 +4,7 @@
 
 Environment::Environment() : maze(Maze::getRandomMaze()), 
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
-							 player1({sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::M}, sf::Color::Green),
-							 player2({sf::Keyboard::E, sf::Keyboard::D, sf::Keyboard::S, sf::Keyboard::F, sf::Keyboard::Q}, sf::Color::Red) {
+							 player1(0), player2(1) {
 	// set up box2d state
 	resetState();
 

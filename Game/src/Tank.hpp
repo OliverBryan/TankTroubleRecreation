@@ -10,7 +10,7 @@ class Environment;
 // Represents a player controlled tank
 class Tank {
 public:
-	Tank(const std::vector<sf::Keyboard::Key>& keys, const sf::Color& spriteColor);
+	Tank(std::size_t configIndex);
 	~Tank() {}
 
 	/// <summary>
