@@ -1,6 +1,7 @@
 #include "Interface.hpp"
 #include "Environment.hpp"
 #include "Resources.hpp"
+#include "Config.hpp"
 
 #include <Log.hpp>
 
@@ -12,14 +13,17 @@ Interface::Interface() {
 	}
 
 	// create sprites and text objects
-	greenTankSprite.setTexture(Resources::getResource("tank_side_green"));
-	redTankSprite.setTexture(Resources::getResource("tank_side_red"));
+	greenTankSprite.setTexture(Resources::getResource("tank_side"));
+	redTankSprite.setTexture(Resources::getResource("tank_side"));
 
 	greenTankSprite.setPosition(600.f, 610.f);
 	redTankSprite.setPosition(320.f, 610.f);
 
 	greenScore.setFont(font);
 	redScore.setFont(font);
+
+	greenTankSprite.setColor(Config::getPlayerColor(0));
+	redTankSprite.setColor(Config::getPlayerColor(1));
 
 	greenScore.setFillColor(sf::Color::Black);
 	redScore.setFillColor(sf::Color::Black);

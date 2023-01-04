@@ -1,13 +1,16 @@
-[2023-01-02.22:18:54]: Initializing Log
-[2023-01-02.22:18:54]: Loading settings.cfg...
-[2023-01-02.22:18:54]: Settings.cfg loaded
-[2023-01-02.22:18:54]: VSync is enabled
-[2023-01-02.22:18:54]: Loading maze.dat
-[2023-01-02.22:18:54]: Loading maze.dat
-[2023-01-02.22:18:54]: Tank collisions are disabled
-[2023-01-02.22:18:54]: Infinite bullet time is disabled
-[2023-01-02.22:18:54]: Bullets do not collide with each other
-[2023-01-02.22:18:54]: Bullets last for 10 seconds
-[2023-01-02.22:18:54]: Rounds continue for 4 seconds after a player death
-[2023-01-02.22:18:55]: FPS: 59
-[2023-01-02.22:18:56]: FPS: 61
+[2023-01-04.00:09:13]: Initializing Log
+[2023-01-04.00:09:13]: Loading settings.cfg...
+[2023-01-04.00:09:13]: Settings.cfg loaded
+[2023-01-04.00:09:13]: VSync is enabled
+[2023-01-04.00:09:13]: Loading maze.dat
+[2023-01-04.00:09:13]: Loading maze.dat
+[2023-01-04.00:09:13]: Tank collisions are disabled
+[2023-01-04.00:09:13]: Infinite bullet time is disabled
+[2023-01-04.00:09:13]: Bullets do not collide with each other
+[2023-01-04.00:09:13]: Bullets last for 10 seconds
+[2023-01-04.00:09:13]: Rounds continue for 4 seconds after a player death
+[2023-01-04.00:09:14]: FPS: 141
+[2023-01-04.00:09:15]: FPS: 146
+[2023-01-04.00:09:16]: FPS: 146
+[2023-01-04.00:09:17]: FPS: 137
+[2023-01-04.00:09:18]: FPS: 146
