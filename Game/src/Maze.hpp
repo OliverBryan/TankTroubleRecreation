@@ -37,7 +37,7 @@ public:
 	/// Draw the maze
 	/// </summary>
 	/// <param name="window">Target window</param>
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window) const;
 
 private:
 	// Size of the maze (by cell, not by pixel)

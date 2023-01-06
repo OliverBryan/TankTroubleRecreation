@@ -1,15 +1,20 @@
-[2023-01-02.22:18:18]: Initializing Log
-[2023-01-02.22:18:18]: Loading settings.cfg...
-[2023-01-02.22:18:18]: Settings.cfg loaded
-[2023-01-02.22:18:18]: VSync is enabled
-[2023-01-02.22:18:18]: Loading proper_maze.dat
-[2023-01-02.22:18:18]: Loading proper_maze.dat
-[2023-01-02.22:18:18]: Tank collisions are disabled
-[2023-01-02.22:18:18]: Infinite bullet time is disabled
-[2023-01-02.22:18:18]: Bullets do not collide with each other
-[2023-01-02.22:18:18]: Bullets last for 10 seconds
-[2023-01-02.22:18:18]: Rounds continue for 4 seconds after a player death
-[2023-01-02.22:18:19]: FPS: 59
-[2023-01-02.22:18:20]: FPS: 62
-[2023-01-02.22:18:21]: FPS: 61
-[2023-01-02.22:18:22]: FPS: 61
+[2023-01-05.22:06:03]: Initializing Log
+[2023-01-05.22:06:03]: Loading settings.cfg...
+[2023-01-05.22:06:03]: Settings.cfg loaded
+[2023-01-05.22:06:03]: VSync is enabled
+[2023-01-05.22:06:03]: Loading proper_maze.dat
+[2023-01-05.22:06:03]: Loading emptyMaze.dat
+[2023-01-05.22:06:03]: Tank collisions are disabled
+[2023-01-05.22:06:03]: Infinite bullet time is disabled
+[2023-01-05.22:06:03]: Bullets do not collide with each other
+[2023-01-05.22:06:03]: Bullets last for 10 seconds
+[2023-01-05.22:06:03]: Rounds continue for 4 seconds after a player death
+[2023-01-05.22:06:04]: FPS: 59
+[2023-01-05.22:06:05]: Set game state to "test"
+[2023-01-05.22:06:05]: Set game state to "game"
+[2023-01-05.22:06:05]: Set game state to "test"
+[2023-01-05.22:06:05]: Set game state to "game"
+[2023-01-05.22:06:05]: Set game state to "test"
+[2023-01-05.22:06:05]: FPS: 61
+[2023-01-05.22:06:06]: Set game state to "game"
+[2023-01-05.22:06:06]: Set game state to "test"

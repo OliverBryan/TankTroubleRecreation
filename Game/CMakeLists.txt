@@ -2,7 +2,7 @@ project(Game VERSION 1.0 LANGUAGES CXX)
 
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SFML_BUILD_AUDIO False)
@@ -54,7 +54,9 @@ add_executable(Game ./src/Collisions.cpp ./src/Collisions.hpp
 			    ./src/Interface.cpp ./src/Interface.hpp
 			    ./src/Main.cpp ./src/Maze.cpp ./src/Maze.hpp
 			    ./src/Resources.cpp ./src/Resources.hpp
-  			    ./src/Tank.cpp ./src/Tank.hpp)
+  			    ./src/Tank.cpp ./src/Tank.hpp
+			    ./src/State.cpp ./src/State.hpp
+ 			    ./src/StateManager.cpp ./src/StateManager.hpp ./src/Component.hpp)
 target_link_libraries(Game PRIVATE sfml-graphics sfml-network box2d Log libconfig++)
 
 # copy dlls post build

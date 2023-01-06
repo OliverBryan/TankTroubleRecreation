@@ -82,8 +82,8 @@ void Tank::tick(b2World* world, Environment* env) {
 		// fire
 		fireKeyDown = true;
 
-		auto& dir = sf::Vector2f(cos(angle * (3.141592653589793 / 180.0)), sin(angle * (3.141592653589793 / 180.0)));
-		auto& v = 234.f * dir;
+		auto dir = sf::Vector2f(cos(angle * (3.141592653589793 / 180.0)), sin(angle * (3.141592653589793 / 180.0)));
+		auto v = 234.f * dir;
 
 		// 34 by 21
 		// local center = <13, 10.5>
@@ -178,7 +178,7 @@ void Tank::incrementScore() {
 	score++;
 }
 
-bool Tank::isAlive() {
+bool Tank::isAlive() const {
 	return alive;
 }
 

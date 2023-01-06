@@ -4,13 +4,14 @@
 #include "Tank.hpp"
 #include "Interface.hpp"
 #include "Maze.hpp"
+#include "Component.hpp"
 
 // TODO: render to sf::RenderTarget instead of sf::RenderWindow
 
 class ContactListener;
 
 // Manages all game objects
-class Environment {
+class Environment : public gui::Component {
 public:
 	Environment();
 	~Environment();
@@ -19,7 +20,7 @@ public:
 	/// Render the game
 	/// </summary>
 	/// <param name="window">Target window</param>
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window) const;
 
 	/// <summary>
 	/// Update the game, should happen 1 / TPS times per second

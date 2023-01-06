@@ -13,8 +13,8 @@ void ContactListener::BeginContact(b2Contact* contact) {
 void ContactListener::resetCollisionInfo() {
 	frameCollisionInfo.clear();
 	
-	player1Death = false;
-	player2Death = false;
+	player1Death = nullptr;
+	player2Death = nullptr;
 }
 
 std::pair<b2Body*, b2Body*> ContactListener::getDeaths() {

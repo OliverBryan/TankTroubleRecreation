@@ -14,7 +14,7 @@ Maze::Maze(const sf::Vector2i& size, std::vector<sf::RectangleShape>&& walls) : 
 	field.setFillColor(sf::Color(231, 231, 231));
 }
 
-void Maze::render(sf::RenderWindow& window) {
+void Maze::render(sf::RenderWindow& window) const {
 	window.draw(field);
 
 	for (const auto& wall : walls) {

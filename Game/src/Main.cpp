@@ -1,8 +1,22 @@
 #include "Environment.hpp"
 #include "Resources.hpp"
 #include "Config.hpp"
+#include "StateManager.hpp"
 
 #include <Log.hpp>
+
+// TEMPORARY
+class TestComponent : public gui::Component {
+public:
+    void render(sf::RenderWindow& window) const {
+        sf::CircleShape cs(20.f);
+        cs.setFillColor(sf::Color::Green);
+        cs.setPosition(100.f, 100.f);
+        window.draw(cs);
+    }
+    void tick() {}
+};
+// TEMPORARY
 
 //TODO: don't crash when config file is not valid
 
@@ -24,8 +38,16 @@ int main() {
     // load sprites
     Resources::init();
 
-    // create the environment
-    Environment env;
+    gui::StateManager manager;
+    manager.createState("game");
+    manager.createComponentForState<Environment>("game");
+    manager.setActiveState("game");
+
+    // TEMPORARY
+    manager.createState("test");
+    manager.createComponentForState<TestComponent>("test");
+    bool yPressed = false;
+    // TEMPORARY
 
     // clock and accumulator to keep a fixed speed update loop
     sf::Clock clock;
@@ -53,7 +75,23 @@ int main() {
         while (accumulator > sf::seconds(1.f / Environment::TPS)) {
             accumulator -= sf::seconds(1.f / Environment::TPS);
 
-            env.tick();
+            // TEMPORARY
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y) && !yPressed) {
+                yPressed = true;
+                
+                std::string newState = "";
+                if (manager.getActiveState() == "game")
+                    newState = "test";
+                else newState = "game";
+
+                manager.setActiveState(newState);
+                Log::logStatus("Set game state to \"" + newState + "\"", ConsoleColor::DarkBlue);
+            }
+            else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+                yPressed = false;
+            // TEMPORARY
+
+            manager.tick();
             
             // debug logging
             if (logFPS) {
@@ -69,7 +107,7 @@ int main() {
 
         // render
         window.clear(sf::Color::White);
-        env.render(window);
+        manager.render(window);
         window.display();
 
         if (logFPS)

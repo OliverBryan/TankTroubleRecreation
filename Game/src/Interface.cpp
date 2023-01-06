@@ -38,7 +38,7 @@ Interface::Interface() {
 	redScore.setStyle(sf::Text::Bold);
 }
 
-void Interface::render(sf::RenderWindow& window) {
+void Interface::render(sf::RenderWindow& window) const {
 	window.draw(greenTankSprite);
 	window.draw(redTankSprite);
 

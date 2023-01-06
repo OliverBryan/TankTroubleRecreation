@@ -71,7 +71,7 @@ public:
 	/// Query if the tank is alive
 	/// </summary>
 	/// <returns>true if the tank is alive, false if it is not</returns>
-	bool isAlive();
+	bool isAlive() const;
 
 	/// <summary>
 	/// Kills the tank. This stops it from being rendered and removes its body from the box2d world.

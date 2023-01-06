@@ -80,7 +80,7 @@ void Environment::resetState() {
 	stateChangeCounter = 0;
 }
 
-void Environment::render(sf::RenderWindow& window) {
+void Environment::render(sf::RenderWindow& window) const {
 	maze.render(window);
 
 	if (player1.isAlive()) player1.render(window);

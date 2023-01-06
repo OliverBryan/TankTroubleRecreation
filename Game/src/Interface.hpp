@@ -14,7 +14,7 @@ public:
 	/// Draw user interface
 	/// </summary>
 	/// <param name="window">Target window</param>
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window) const;
 
 	/// <summary>
 	/// Update the interface
