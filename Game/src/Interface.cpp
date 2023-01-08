@@ -6,12 +6,6 @@
 #include <Log.hpp>
 
 Interface::Interface() {
-	// load font
-	if (!font.loadFromFile("./res/Roboto-Thin.ttf")) {
-		Log::logError("Error: could not load Roboto-Thin.ttf");
-		exit(-1);
-	}
-
 	// create sprites and text objects
 	greenTankSprite.setTexture(Resources::getResource("tank_side"));
 	redTankSprite.setTexture(Resources::getResource("tank_side"));
@@ -19,8 +13,8 @@ Interface::Interface() {
 	greenTankSprite.setPosition(600.f, 610.f);
 	redTankSprite.setPosition(320.f, 610.f);
 
-	greenScore.setFont(font);
-	redScore.setFont(font);
+	greenScore.setFont(Resources::getFont());
+	redScore.setFont(Resources::getFont());
 
 	greenTankSprite.setColor(Config::getPlayerColor(0));
 	redTankSprite.setColor(Config::getPlayerColor(1));

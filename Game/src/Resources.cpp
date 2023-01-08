@@ -11,6 +11,7 @@
 // Static data definitions
 bool Resources::initialized = false;
 std::unordered_map<std::string, sf::Texture> Resources::resources;
+sf::Font Resources::font;
 
 void Resources::init() {
 	// open the file
@@ -35,6 +36,12 @@ void Resources::init() {
 		exit(-1);
 	}
 
+	// load font
+	if (!font.loadFromFile("./res/Roboto-Thin.ttf")) {
+		Log::logError("Error: could not load Roboto-Thin.ttf");
+		exit(-1);
+	}
+
 	initialized = true;
 }
 
@@ -51,4 +58,8 @@ sf::Texture& Resources::getResource(const std::string& name) {
 		Log::logError("Could not find resource " + name);
 		exit(-1);
 	}
+}
+
+sf::Font& Resources::getFont() {
+	return font;
 }

@@ -2,21 +2,9 @@
 #include "Resources.hpp"
 #include "Config.hpp"
 #include "StateManager.hpp"
+#include "Button.hpp"
 
 #include <Log.hpp>
-
-// TEMPORARY
-class TestComponent : public gui::Component {
-public:
-    void render(sf::RenderWindow& window) const {
-        sf::CircleShape cs(20.f);
-        cs.setFillColor(sf::Color::Green);
-        cs.setPosition(100.f, 100.f);
-        window.draw(cs);
-    }
-    void tick() {}
-};
-// TEMPORARY
 
 //TODO: don't crash when config file is not valid
 
@@ -45,7 +33,15 @@ int main() {
 
     // TEMPORARY
     manager.createState("test");
-    manager.createComponentForState<TestComponent>("test");
+    sf::Vector2f size(200.f, 100.f);
+
+    gui::EffectState initialState {size, sf::Color(52, 235, 134)};
+    gui::EffectState hoverState {size * 1.1f, sf::Color(54, 191, 115)};
+
+    gui::Effect hover(initialState, hoverState, sf::milliseconds(50));
+    gui::Effect click(hoverState, {size, sf::Color(36, 133, 79)}, sf::milliseconds(50));
+
+    manager.createComponentForState<gui::Button>("test", sf::Vector2f(525.f, 335.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Button", 36, hover, click);
     bool yPressed = false;
     // TEMPORARY
 
@@ -69,6 +65,8 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            manager.handleEvent(event);
         }
 
         // update at a fixed rate (default 60tps)

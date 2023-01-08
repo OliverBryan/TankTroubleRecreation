@@ -56,7 +56,9 @@ add_executable(Game ./src/Collisions.cpp ./src/Collisions.hpp
 			    ./src/Resources.cpp ./src/Resources.hpp
   			    ./src/Tank.cpp ./src/Tank.hpp
 			    ./src/State.cpp ./src/State.hpp
- 			    ./src/StateManager.cpp ./src/StateManager.hpp ./src/Component.hpp)
+ 			    ./src/StateManager.cpp ./src/StateManager.hpp ./src/Component.hpp
+			    ./src/Button.cpp ./src/Button.hpp
+			    ./src/RoundedRectangleShape.cpp ./src/RoundedRectangleShape.hpp)
 target_link_libraries(Game PRIVATE sfml-graphics sfml-network box2d Log libconfig++)
 
 # copy dlls post build

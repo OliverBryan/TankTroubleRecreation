@@ -3,6 +3,7 @@
 
 namespace sf {
 	class RenderWindow;
+	class Event;
 }
 
 namespace gui {
@@ -10,6 +11,8 @@ namespace gui {
 	public:
 		virtual void render(sf::RenderWindow& window) const = 0;
 		virtual void tick() = 0;
+
+		virtual void handleEvent(const sf::Event& e) {};
 	};
 }
 

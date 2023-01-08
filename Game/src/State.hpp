@@ -8,6 +8,7 @@
 
 namespace sf {
 	class RenderWindow;
+	class Event;
 }
 
 namespace gui {
@@ -29,6 +30,8 @@ namespace gui {
 
 		void render(sf::RenderWindow& window) const;
 		void tick();
+
+		void handleEvent(sf::Event e);
 
 	private:
 		std::vector<std::unique_ptr<Component>> components;

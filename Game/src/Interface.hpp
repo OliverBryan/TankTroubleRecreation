@@ -5,6 +5,10 @@
 
 class Environment;
 
+namespace gui {
+	class Button;
+}
+
 // Manages the user interface
 class Interface {
 public:
@@ -25,7 +29,6 @@ private:
 	sf::Sprite greenTankSprite;
 	sf::Sprite redTankSprite;
 
-	sf::Font font;
 	sf::Text greenScore;
 	sf::Text redScore;
 };

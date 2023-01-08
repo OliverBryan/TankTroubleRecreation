@@ -21,10 +21,13 @@ public:
 	/// <returns>Texture of the resource</returns>
 	static sf::Texture& getResource(const std::string& name);
 
+	static sf::Font& getFont();
+
 private:
 	static bool initialized;
 
 	static std::unordered_map<std::string, sf::Texture> resources;
+	static sf::Font font;
 };
 
 #endif /* RESOURCES_HPP */

@@ -29,6 +29,8 @@ namespace gui {
 		void render(sf::RenderWindow& window) const;
 		void tick();
 
+		void handleEvent(sf::Event event);
+
 		// this MUST be called before any calls to render() or tick() are made
 		void setActiveState(const std::string& newStateName);
 

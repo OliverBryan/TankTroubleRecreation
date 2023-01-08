@@ -1,6 +1,8 @@
 #include "StateManager.hpp"
 #include "Component.hpp"
 
+#include <SFML/Window/Event.hpp>
+
 void gui::StateManager::createState(const std::string& stateName) {
 	states.emplace(make_pair(stateName, std::make_unique<State>()));
 }
@@ -21,6 +23,12 @@ void gui::StateManager::render(sf::RenderWindow& window) const {
 
 void gui::StateManager::tick() {
 	states.at(activeState)->tick();
+}
+
+void gui::StateManager::handleEvent(sf::Event e) {
+	// this filtering can be removed if needed
+	if (e.type == sf::Event::MouseMoved || e.type == sf::Event::MouseButtonPressed || e.type == sf::Event::MouseButtonReleased)
+		states.at(activeState)->handleEvent(e);
 }
 
 void gui::StateManager::setActiveState(const std::string& newStateName) {
