@@ -41,7 +41,9 @@ int main() {
     gui::Effect hover(initialState, hoverState, sf::milliseconds(50));
     gui::Effect click(hoverState, {size, sf::Color(36, 133, 79)}, sf::milliseconds(50));
 
-    manager.createComponentForState<gui::Button>("test", sf::Vector2f(525.f, 335.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Button", 36, hover, click);
+    manager.createComponentForState<gui::Button>("test", sf::Vector2f(525.f, 335.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Button", 36, hover, click, [&manager]() {
+        manager.setActiveState("game");
+    });
     bool yPressed = false;
     // TEMPORARY
 

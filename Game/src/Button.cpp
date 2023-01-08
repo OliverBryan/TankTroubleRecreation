@@ -11,16 +11,32 @@ void gui::Effect::finish() {
 	playing = false;
 }
 
-gui::Effect gui::Effect::getReverse() {
+gui::Effect gui::Effect::getReverse() const {
 	return Effect(finalState, initialState, time);
 }
 
-bool gui::Effect::isPlaying() {
+bool gui::Effect::isPlaying() const {
 	return playing;
 }
 
-sf::Time gui::Effect::getTime() {
+sf::Time gui::Effect::getTime() const {
 	return time;
+}
+
+gui::EffectState gui::Effect::getInitialState() const {
+	return initialState;
+}
+
+gui::EffectState gui::Effect::getFinalState() const {
+	return finalState;
+}
+
+void gui::Effect::setInitialState(const EffectState& state) {
+	initialState = state;
+}
+
+void gui::Effect::setFinalState(const EffectState& state) {
+	finalState = state;
 }
 
 gui::EffectState gui::Effect::getCurrentState() {
@@ -47,13 +63,10 @@ gui::EffectState gui::Effect::getCurrentState() {
 	return current;
 }
 
-gui::Button::Button(const sf::Vector2f& position, const sf::Vector2f& size, float radius, sf::Color color, sf::Color textColor, const std::string& str, unsigned int textSize, const Effect& hoverEffect, const Effect& clickEffect) :
-	shape(size, radius, 1000), hover(hoverEffect), unhover(hover.getReverse()), click(clickEffect), release(click.getReverse()) {
+gui::Button::Button(const sf::Vector2f& position, const sf::Vector2f& size, float radius, sf::Color color, sf::Color textColor, const std::string& str, unsigned int textSize, const Effect& hoverEffect, const Effect& clickEffect, const std::function<void()>& callback) :
+	shape(size, radius, 1000), hover(hoverEffect), unhover(hover.getReverse()), click(clickEffect), release(click.getReverse()), callback(callback) {
 
-	auto shapeBounds = shape.getLocalBounds();
-	shape.setOrigin(shapeBounds.left + shapeBounds.width / 2.f, shapeBounds.top + shapeBounds.height / 2.f);
-
-	shape.setPosition(position);
+	centerShape(position);
 	shape.setFillColor(color);
 
 	text.setCharacterSize(textSize);
@@ -74,15 +87,19 @@ void gui::Button::tick() {
 	if (activeEffect != nullptr && activeEffect->isPlaying()) {
 		EffectState currentState = activeEffect->getCurrentState();
 
-		auto pos = shape.getPosition();
+		auto shapePos = shape.getPosition();
 		shape.setSize(currentState.size);
 		shape.setFillColor(currentState.color);
-		shape.setPosition(pos);
+		centerShape(shapePos);
 
 		positionText();
 	}
-	else if (activeEffect != nullptr)
+	else if (activeEffect != nullptr) {
+		if (activeEffect == &release)
+			release.setFinalState(click.getInitialState());
+
 		activeEffect = nullptr;
+	}
 }
 
 // TODO: clean this up
@@ -97,6 +114,12 @@ void gui::Button::handleEvent(const sf::Event& e) {
 		hovering = true;
 	}
 	else if (e.type == sf::Event::MouseMoved && !shape.getGlobalBounds().contains(sf::Vector2f(e.mouseMove.x, e.mouseMove.y)) && hovering) {
+		if (pressed) {
+			release.setFinalState(unhover.getFinalState());
+			hovering = false;
+			return;
+		}
+
 		if (activeEffect != nullptr)
 			activeEffect->finish();
 
@@ -121,8 +144,17 @@ void gui::Button::handleEvent(const sf::Event& e) {
 		activeEffect = &release;
 		activeEffect->start();
 
+		if (shape.getGlobalBounds().contains(sf::Vector2f(e.mouseButton.x, e.mouseButton.y)))
+			callback();
+
 		pressed = false;
 	}
+}
+
+void gui::Button::centerShape(const sf::Vector2f& position) {
+	auto shapeBounds = shape.getLocalBounds();
+	shape.setOrigin(shapeBounds.left + shapeBounds.width / 2.f, shapeBounds.top + shapeBounds.height / 2.f);
+	shape.setPosition(position);
 }
 
 void gui::Button::positionText() {

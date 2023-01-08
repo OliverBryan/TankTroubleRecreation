@@ -5,6 +5,7 @@
 #include "RoundedRectangleShape.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 
 namespace gui {
 	struct EffectState {
@@ -23,9 +24,15 @@ namespace gui {
 		EffectState getCurrentState();
 		void finish();
 
-		Effect getReverse();
-		bool isPlaying();
-		sf::Time getTime();
+		Effect getReverse() const;
+		bool isPlaying() const;
+		sf::Time getTime() const;
+
+		EffectState getInitialState() const;
+		EffectState getFinalState() const;
+
+		void setInitialState(const EffectState& state);
+		void setFinalState(const EffectState& state);
 
 	private:
 		EffectState initialState;
@@ -39,7 +46,7 @@ namespace gui {
 
 	class Button : public Component {
 	public:
-		Button(const sf::Vector2f& position, const sf::Vector2f& size, float radius, sf::Color color, sf::Color textColor, const std::string& str, unsigned int textSize, const Effect& hoverEffect, const Effect& clickEffect);
+		Button(const sf::Vector2f& position, const sf::Vector2f& size, float radius, sf::Color color, sf::Color textColor, const std::string& str, unsigned int textSize, const Effect& hoverEffect, const Effect& clickEffect, const std::function<void()>& callback);
 
 		void render(sf::RenderWindow& window) const;
 		void tick();
@@ -47,6 +54,7 @@ namespace gui {
 		void handleEvent(const sf::Event& e);
 
 	private:
+		void centerShape(const sf::Vector2f& position);
 		void positionText();
 
 		sf::RoundedRectangleShape shape;
@@ -64,6 +72,8 @@ namespace gui {
 
 		// use of a raw pointer here makes my life easier even though its bad practice
 		Effect* activeEffect = nullptr;
+
+		std::function<void()> callback;
 	};
 }
 

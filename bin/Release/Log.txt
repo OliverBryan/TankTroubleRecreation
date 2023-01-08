@@ -1,18 +1,35 @@
-[2023-01-05.22:05:46]: Initializing Log
-[2023-01-05.22:05:46]: Loading settings.cfg...
-[2023-01-05.22:05:46]: Settings.cfg loaded
-[2023-01-05.22:05:46]: VSync is enabled
-[2023-01-05.22:05:46]: Loading maze.dat
-[2023-01-05.22:05:46]: Loading emptyMaze.dat
-[2023-01-05.22:05:46]: Tank collisions are disabled
-[2023-01-05.22:05:46]: Infinite bullet time is disabled
-[2023-01-05.22:05:46]: Bullets do not collide with each other
-[2023-01-05.22:05:46]: Bullets last for 10 seconds
-[2023-01-05.22:05:46]: Rounds continue for 4 seconds after a player death
-[2023-01-05.22:05:47]: FPS: 60
-[2023-01-05.22:05:48]: Set game state to "test"
-[2023-01-05.22:05:48]: FPS: 61
-[2023-01-05.22:05:48]: Set game state to "game"
-[2023-01-05.22:05:49]: Set game state to "test"
-[2023-01-05.22:05:49]: Set game state to "game"
-[2023-01-05.22:05:49]: Set game state to "test"
+[2023-01-08.17:18:55]: Initializing Log
+[2023-01-08.17:18:55]: Loading settings.cfg...
+[2023-01-08.17:18:55]: Settings.cfg loaded
+[2023-01-08.17:18:55]: VSync is enabled
+[2023-01-08.17:18:55]: Loading maze.dat
+[2023-01-08.17:18:55]: Loading emptyMaze.dat
+[2023-01-08.17:18:55]: Tank collisions are disabled
+[2023-01-08.17:18:55]: Infinite bullet time is disabled
+[2023-01-08.17:18:55]: Bullets do not collide with each other
+[2023-01-08.17:18:55]: Bullets last for 10 seconds
+[2023-01-08.17:18:55]: Rounds continue for 4 seconds after a player death
+[2023-01-08.17:18:55]: Set game state to "test"
+[2023-01-08.17:18:56]: FPS: 59
+[2023-01-08.17:18:57]: FPS: 61
+[2023-01-08.17:18:58]: FPS: 61
+[2023-01-08.17:18:59]: Set game state to "test"
+[2023-01-08.17:18:59]: FPS: 61
+[2023-01-08.17:19:00]: Set game state to "test"
+[2023-01-08.17:19:00]: FPS: 61
+[2023-01-08.17:19:01]: Set game state to "game"
+[2023-01-08.17:19:01]: FPS: 61
+[2023-01-08.17:19:02]: Set game state to "test"
+[2023-01-08.17:19:02]: FPS: 61
+[2023-01-08.17:19:03]: FPS: 61
+[2023-01-08.17:19:03]: Set game state to "test"
+[2023-01-08.17:19:04]: FPS: 61
+[2023-01-08.17:19:05]: FPS: 61
+[2023-01-08.17:19:05]: Set game state to "test"
+[2023-01-08.17:19:06]: FPS: 61
+[2023-01-08.17:19:07]: FPS: 61
+[2023-01-08.17:19:08]: FPS: 61
+[2023-01-08.17:19:09]: FPS: 61
+[2023-01-08.17:19:10]: FPS: 61
+[2023-01-08.17:19:11]: Set game state to "test"
+[2023-01-08.17:19:11]: FPS: 61
