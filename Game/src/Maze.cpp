@@ -9,17 +9,35 @@
 
 #include <Log.hpp>
 
-Maze::Maze(const sf::Vector2i& size, std::vector<sf::RectangleShape>&& walls) : size(size), walls(walls) {
+Maze::Maze(const sf::Vector2i& size, std::vector<sf::RectangleShape>&& walls) : size(size), walls(walls), va(sf::Triangles) {
 	field.setPosition(sf::Vector2f(250.f, 45.f));
 	field.setFillColor(sf::Color(231, 231, 231));
+
+	for (const auto& wall : walls)
+		pushRect(wall, va);
 }
 
 void Maze::render(sf::RenderWindow& window) const {
 	window.draw(field);
 
-	for (const auto& wall : walls) {
-		window.draw(wall);
-	}
+	window.draw(va);
+}
+
+inline void Maze::pushRect(const sf::RectangleShape& rs, sf::VertexArray& va) const {
+	sf::Vector2f position(rs.getPosition());
+	sf::Vector2f widthOffset(rs.getLocalBounds().width, 0.f), heightOffset(0.f, rs.getLocalBounds().height);
+
+	sf::Vertex topLeft(position, sf::Color::Black);
+	sf::Vertex topRight(position + widthOffset, sf::Color::Black);
+	sf::Vertex bottomLeft(position + heightOffset, sf::Color::Black);
+	sf::Vertex bottomRight(position + widthOffset + heightOffset, sf::Color::Black);
+
+	va.append(bottomLeft);
+	va.append(topLeft);
+	va.append(topRight);
+	va.append(bottomLeft);
+	va.append(topRight);
+	va.append(bottomRight);
 }
 
 Maze Maze::loadMaze(const std::string& fileName) {

@@ -83,6 +83,7 @@ void Environment::resetState() {
 void Environment::render(sf::RenderWindow& window) const {
 	maze.render(window);
 
+	// TODO: set opacity to zero instead of doing this check
 	if (player1.isAlive()) player1.render(window);
 	if (player2.isAlive()) player2.render(window);
 

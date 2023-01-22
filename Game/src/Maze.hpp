@@ -43,6 +43,9 @@ private:
 	// Size of the maze (by cell, not by pixel)
 	sf::Vector2i size;
 
+	sf::VertexArray va;
+	inline void pushRect(const sf::RectangleShape& rs, sf::VertexArray& va) const;
+
 	// Background
 	sf::RectangleShape field = sf::RectangleShape(static_cast<sf::Vector2f>(size * 62) + sf::Vector2f(2.0f, 2.0f));
 
