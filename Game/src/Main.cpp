@@ -45,6 +45,8 @@ int main() {
         manager.setActiveState("game");
     });
     bool yPressed = false;
+
+    manager.setActiveState("test");
     // TEMPORARY
 
     // clock and accumulator to keep a fixed speed update loop
