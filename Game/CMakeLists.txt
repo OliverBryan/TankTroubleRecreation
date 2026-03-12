@@ -7,6 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SFML_BUILD_AUDIO False)
 
+if(WIN32)
+    add_definitions(-DNOMINMAX)
+endif()
+
 message("Fetching SFML...")
 FetchContent_Declare(
 	SFML
@@ -22,7 +26,7 @@ message("Fetching Box2D...")
 FetchContent_Declare(
 	Box2D
 	GIT_REPOSITORY https://github.com/erincatto/box2d.git
-	GIT_TAG main
+	GIT_TAG v2.4.2
 )
 FetchContent_MakeAvailable(Box2D)
 
