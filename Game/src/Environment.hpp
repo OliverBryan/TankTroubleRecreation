@@ -80,6 +80,8 @@ private:
 	// settings
 	bool infiniteBulletTime = false; // should bullets expire
 	bool bulletCollisions = false; // should bullets collide with themselves
+	bool infiniteBullets = false; // how many active bullets can each tank have at any fixed point in time
+	unsigned int bulletCap = 10;
 	unsigned int bulletTime = 10;
 	unsigned int postRoundTime = 4;
 

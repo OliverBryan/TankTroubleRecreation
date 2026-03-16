@@ -17,8 +17,14 @@ Environment::Environment() : maze(Maze::getRandomMaze()),
 	bulletCollisions = Config::getSetting("bulletCollisions", false);
 	Log::logStatus(std::string("Bullets do ") + (bulletCollisions ? "" : "not ") + "collide with each other", ConsoleColor::LightPurple);
 
+	infiniteBullets = Config::getSetting("infiniteBullets", false);
+	Log::logStatus(std::string("Infinite bullet cap is ") + (infiniteBullets ? "enabled" : "disabled"), ConsoleColor::LightPurple);
+
 	bulletTime = Config::getSetting("bulletTime", 10);
 	Log::logStatus(std::string("Bullets last for ") + std::to_string(bulletTime) + " seconds", ConsoleColor::LightPurple);
+
+	bulletCap = Config::getSetting("bulletCap", 10);
+	Log::logStatus(std::string("Tanks can fire ") + std::to_string(bulletCap) + " seconds", ConsoleColor::LightPurple);
 
 	postRoundTime = Config::getSetting("postRoundTime", 4);
 	Log::logStatus(std::string("Rounds continue for ") + std::to_string(postRoundTime) + " seconds after a player death", ConsoleColor::LightPurple);
@@ -26,6 +32,10 @@ Environment::Environment() : maze(Maze::getRandomMaze()),
 
 Environment::~Environment() {
 	delete listener;
+	delete world;
+
+	listener = nullptr;
+	world = nullptr;
 }
 
 void Environment::registerWalls() {
@@ -164,6 +174,8 @@ void Environment::tick() {
 }
 
 void Environment::createBullet(const sf::Vector2f& position, const sf::Vector2f& velocity) {
+	if (bullets.size() >= bulletCap) return;
+
 	// body definition
 	b2BodyDef bulletBodyDef;
 	bulletBodyDef.type = b2_dynamicBody;
