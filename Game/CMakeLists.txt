@@ -41,8 +41,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Log)
 
-set(BUILD_EXAMPLES OFF)
-set(BUILD_TESTS OFF)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
 
 message("Fetching libconfig...")
 FetchContent_Declare(
@@ -62,7 +62,8 @@ add_executable(Game ./src/Collisions.cpp ./src/Collisions.hpp
 			    ./src/State.cpp ./src/State.hpp
  			    ./src/StateManager.cpp ./src/StateManager.hpp ./src/Component.hpp
 			    ./src/Button.cpp ./src/Button.hpp
-			    ./src/RoundedRectangleShape.cpp ./src/RoundedRectangleShape.hpp)
+			    ./src/RoundedRectangleShape.cpp ./src/RoundedRectangleShape.hpp
+			    ./src/Label.cpp ./src/Label.hpp)
 target_link_libraries(Game PRIVATE sfml-graphics sfml-network box2d Log libconfig++)
 
 # copy dlls post build

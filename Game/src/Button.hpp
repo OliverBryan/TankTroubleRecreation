@@ -70,7 +70,7 @@ namespace gui {
 		Effect click;
 		Effect release;
 
-		// use of a raw pointer here makes my life easier even though its bad practice
+		// use of a raw pointer here makes my life easier even though it's bad practice
 		Effect* activeEffect = nullptr;
 
 		std::function<void()> callback;
