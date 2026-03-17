@@ -3,6 +3,7 @@
 #include "Config.hpp"
 #include "StateManager.hpp"
 #include "Button.hpp"
+#include "TitleCard.hpp"
 
 #include <Log.hpp>
 
@@ -31,23 +32,33 @@ int main() {
     manager.createComponentForState<Environment>("game");
     manager.setActiveState("game");
 
-    // TEMPORARY
-    manager.createState("test");
-    sf::Vector2f size(200.f, 100.f);
+    // Menu state
+    manager.createState("menu");
 
-    gui::EffectState initialState {size, sf::Color(52, 235, 134)};
-    gui::EffectState hoverState {size * 1.1f, sf::Color(54, 191, 115)};
+    // Title card
+    manager.createComponentForState<gui::TitleCard>("menu",
+        sf::Vector2f(525.f, 180.f),       // position (centered horizontally)
+        "Tank Trouble", 72,                // title text and size
+        "Recreation", 28,                  // subtitle text and size
+        sf::Color::Black,                  // title color
+        sf::Color(100, 100, 100)           // subtitle color
+    );
 
+    // Play button
+    sf::Vector2f btnSize(200.f, 80.f);
+    gui::EffectState initialState {btnSize, sf::Color(52, 235, 134)};
+    gui::EffectState hoverState {btnSize * 1.1f, sf::Color(54, 191, 115)};
     gui::Effect hover(initialState, hoverState, sf::milliseconds(50));
-    gui::Effect click(hoverState, {size, sf::Color(36, 133, 79)}, sf::milliseconds(50));
+    gui::Effect click(hoverState, {btnSize, sf::Color(36, 133, 79)}, sf::milliseconds(50));
 
-    manager.createComponentForState<gui::Button>("test", sf::Vector2f(525.f, 335.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Button", 36, hover, click, [&manager]() {
-        manager.setActiveState("game");
-    });
-    bool yPressed = false;
+    manager.createComponentForState<gui::Button>("menu",
+        sf::Vector2f(525.f, 400.f), btnSize, 10.f,
+        sf::Color(52, 235, 134), sf::Color::Black,
+        "Play", 36, hover, click,
+        [&manager]() { manager.setActiveState("game"); }
+    );
 
-    manager.setActiveState("test");
-    // TEMPORARY
+    manager.setActiveState("menu");
 
     // clock and accumulator to keep a fixed speed update loop
     sf::Clock clock;
@@ -76,22 +87,6 @@ int main() {
         // update at a fixed rate (default 60tps)
         while (accumulator > sf::seconds(1.f / Environment::TPS)) {
             accumulator -= sf::seconds(1.f / Environment::TPS);
-
-            // TEMPORARY
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y) && !yPressed) {
-                yPressed = true;
-                
-                std::string newState = "";
-                if (manager.getActiveState() == "game")
-                    newState = "test";
-                else newState = "game";
-
-                manager.setActiveState(newState);
-                Log::logStatus("Set game state to \"" + newState + "\"", ConsoleColor::DarkBlue);
-            }
-            else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
-                yPressed = false;
-            // TEMPORARY
 
             manager.tick();
             
