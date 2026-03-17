@@ -23,7 +23,7 @@ public:
 	/// <summary>
 	/// Update the interface
 	/// </summary>
-	void tick(Environment* env);
+	void tick(const Environment* const env);
 
 private:
 	sf::Sprite greenTankSprite;

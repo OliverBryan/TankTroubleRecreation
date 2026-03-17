@@ -104,7 +104,6 @@ void Environment::render(sf::RenderWindow& window) const {
 		window.draw(b.shape);
 }
 
-// temporary: this will be moved to Environment
 void Environment::handleDeath(Bullet& b, Tank& t, const std::string& n) {
 	// death has occured
 	Log::logStatus("Player " + n + " died", ConsoleColor::Gold);
@@ -112,7 +111,7 @@ void Environment::handleDeath(Bullet& b, Tank& t, const std::string& n) {
 	// kill the dead tank
 	t.kill(world);
 
-	// destroy the bullet by settings its timer to -1
+	// destroy the bullet by setting its timer to -1
 	b.timer = -1;
 
 	state = State::Dead;
@@ -142,8 +141,8 @@ void Environment::tick() {
 	world->Step(1.f / Environment::TPS, 10, 10);
 	
 	// update the player positions
-	if (p1Alive) player1.tick(world, this);
-	if (p2Alive) player2.tick(world, this);
+	if (p1Alive) player1.tick(this);
+	if (p2Alive) player2.tick(this);
 
 	const auto& deaths = listener->getDeaths();
 

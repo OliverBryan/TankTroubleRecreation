@@ -50,7 +50,7 @@ void Tank::move() {
 		angle -= 3.7;
 	}
 	else if (sf::Keyboard::isKeyPressed(keys[3])) {
-		tankBody->SetAngularVelocity(3.87463f);
+		tankBody->SetAngularVelocity(3.87463);
 		angle += 3.7;
 	}
 	else tankBody->SetAngularVelocity(0.0f);
@@ -66,7 +66,7 @@ void Tank::move() {
 	else tankBody->SetLinearVelocity(b2Vec2(0.f, 0.f));
 }
 
-void Tank::tick(b2World* world, Environment* env) {
+void Tank::tick(Environment* env) {
 	// fetch the tank's new position and angle
 	auto p = tankBody->GetPosition();
 	position = sf::Vector2f(p.x, p.y) * 100.f;
@@ -98,15 +98,21 @@ void Tank::setUpCollisions(b2World* world, uint16 index) {
 	// set to alive
 	alive = true;
 
-	// reset position to a random place
-	position = sf::Vector2f(static_cast<float>(irand(275, 775)), static_cast<float>(irand(75, 575)));
+	// reset position to a random call
+	position = sf::Vector2f(static_cast<float>(irand(0, 8)) * 62.f + 281.f, static_cast<float>(irand(0, 8)) * 62.f + 76.f);
 	sprite.setPosition(position);
 	bounds.setPosition(position);
+
+	// set random angle
+	angle = static_cast<float>(irand(0, 359));
+	sprite.setRotation(angle);
+	bounds.setRotation(angle);
 
 	// body definition
 	b2BodyDef tankBodyDef;
 	tankBodyDef.type = b2_dynamicBody;
 	tankBodyDef.position.Set(bounds.getPosition().x / 100.f, bounds.getPosition().y / 100.f);
+	tankBodyDef.angle = angle * (3.141592653589793 / 180.0);
 
 	// fixed rotation makes movement more like the original game
 	bool fixedRotation = Config::getSetting("fixedRotation", true);

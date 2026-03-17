@@ -8,7 +8,6 @@
 
 #include <Log.hpp>
 
-// TODO: don't crash when config file is not valid
 // TODO: some ui bugs with buttons, effects, and state changes (i.e. pause game)
 
 int main() {
@@ -54,6 +53,7 @@ int main() {
         manager.setActiveState("game");
         manager.setBackgroundState("");
     });
+    manager.createComponentForState<gui::Label>("pause", sf::Vector2f(525.f, 200.f), 50, "Game Paused");
     manager.createKeyTransition("game", "pause", sf::Keyboard::Escape, true);
 
     manager.setActiveState("menu");

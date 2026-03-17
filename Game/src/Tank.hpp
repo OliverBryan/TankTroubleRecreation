@@ -27,9 +27,8 @@ public:
 	/// <summary>
 	/// Update the tank based on the results of b2World::Step
 	/// </summary>
-	/// <param name="world">box2d world</param>
 	/// <param name="env">Environment</param>
-	void tick(b2World* world, Environment* env);
+	void tick(Environment* env);
 
 	/// <summary>
 	/// Get the AABB of the tank

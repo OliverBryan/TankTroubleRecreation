@@ -6,8 +6,6 @@
 #include "Maze.hpp"
 #include "Component.hpp"
 
-// TODO: render to sf::RenderTarget instead of sf::RenderWindow
-
 class ContactListener;
 
 // Manages all game objects

@@ -40,7 +40,7 @@ void Interface::render(sf::RenderWindow& window) const {
 	window.draw(redScore);
 }
 
-void Interface::tick(Environment* env) {
+void Interface::tick(const Environment* const env) {
 	greenScore.setString(std::to_string(env->player1.getScore()));
 	redScore.setString(std::to_string(env->player2.getScore()));
 }

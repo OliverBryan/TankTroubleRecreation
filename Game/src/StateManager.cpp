@@ -73,12 +73,12 @@ void gui::StateManager::setActiveState(const std::string& newStateName) {
 }
 
 void gui::StateManager::setBackgroundState(const std::string& newStateName) {
-	if (states.count(newStateName) == 0) {
+	if (states.count(newStateName) == 0 && newStateName != "") {
 		Log::logError("Could not find state \"" + newStateName + "\" (StateManager::setBackgroundState)");
 	}
 
 	backgroundState = newStateName;
-	Log::logStatus("Set background game state to \"" + newStateName + "\"", ConsoleColor::Green);
+	Log::logStatus("Set background game state to \"" + (backgroundState == "" ? newStateName : "null") + "\"", ConsoleColor::Green);
 }
 
 const std::string& gui::StateManager::getActiveState() const {
