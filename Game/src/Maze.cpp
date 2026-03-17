@@ -124,6 +124,7 @@ Maze Maze::loadMaze(const std::string& fileName) {
 	}
 }
 
+// TODO: load mazes only once
 Maze Maze::getRandomMaze() {
 	std::vector<std::filesystem::path> mazePaths;
 

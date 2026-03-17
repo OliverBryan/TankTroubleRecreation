@@ -6,7 +6,7 @@ Environment::Environment() : maze(Maze::getRandomMaze()),
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
 							 player1(0), player2(1) {
 	// set up box2d state
-	resetState();
+	resetState(true);
 
 	listener = new ContactListener();
 	world->SetContactListener(listener);
@@ -69,8 +69,9 @@ void Environment::registerWalls() {
 	}
 }
 
-void Environment::resetState() {
-	maze = Maze::getRandomMaze();
+void Environment::resetState(bool firstCall) {
+	if (!firstCall)
+		maze = Maze::getRandomMaze();
 
 	b2Body* body = world->GetBodyList();
 	while (body) {

@@ -5,6 +5,7 @@
 #include "RoundedRectangleShape.hpp"
 
 #include <SFML/Graphics.hpp>
+
 #include <functional>
 
 namespace gui {

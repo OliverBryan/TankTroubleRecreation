@@ -4,10 +4,12 @@
 #include "StateManager.hpp"
 #include "Button.hpp"
 #include "Label.hpp"
+#include "ColorFilter.hpp"
 
 #include <Log.hpp>
 
-//TODO: don't crash when config file is not valid
+// TODO: don't crash when config file is not valid
+// TODO: some ui bugs with buttons, effects, and state changes (i.e. pause game)
 
 int main() {
     // initiate log and load config settings
@@ -30,7 +32,6 @@ int main() {
     gui::StateManager manager;
     manager.createState("game");
     manager.createComponentForState<Environment>("game");
-    manager.setActiveState("game");
 
     // TEMPORARY
     manager.createState("menu");
@@ -45,7 +46,15 @@ int main() {
     manager.createComponentForState<gui::Button>("menu", sf::Vector2f(525.f, 335.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Play", 36, hover, click, [&manager]() {
         manager.setActiveState("game");
     });
-    manager.createComponentForState<gui::Label>("menu", sf::Vector2f(525.f, 200.f), 50.f, "Tank Trouble");
+    manager.createComponentForState<gui::Label>("menu", sf::Vector2f(525.f, 200.f), 50, "Tank Trouble");
+ 
+    manager.createState("pause");
+    manager.createComponentForState<gui::ColorFilter>("pause", sf::Color(255, 255, 255, 150));
+    manager.createComponentForState<gui::Button>("pause", sf::Vector2f(525.f, 335.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Resume", 36, hover, click, [&manager]() {
+        manager.setActiveState("game");
+        manager.setBackgroundState("");
+    });
+    manager.createKeyTransition("game", "pause", sf::Keyboard::Escape, true);
 
     manager.setActiveState("menu");
     // TEMPORARY

@@ -21,6 +21,10 @@ public:
 	/// <returns>Texture of the resource</returns>
 	static sf::Texture& getResource(const std::string& name);
 
+	/// <summary>
+	/// Fetches the font object used throughout the game (always Roboto Thin)
+	/// </summary>
+	/// <returns>Font object for Roboto Thin</returns>
 	static sf::Font& getFont();
 
 private:

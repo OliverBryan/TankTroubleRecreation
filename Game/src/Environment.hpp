@@ -62,7 +62,7 @@ private:
 
 	// should be called after the maze is changed
 	// resets box2d state (deletes all objects and adds walls and tanks)
-	void resetState();
+	void resetState(bool firstCall = false);
 
 	void handleDeath(Bullet& b, Tank& t, const std::string& playerName);
 

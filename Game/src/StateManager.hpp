@@ -4,15 +4,24 @@
 #include "State.hpp"
 #include "Log.hpp"
 
+#include <SFML/Window/Event.hpp>
+
 #include <unordered_map>
 #include <string>
 
 namespace gui {
+	struct StateTransition {
+		std::string initialState;
+		std::string finalState;
+		bool background;
+	};
+
 	class StateManager {
 	public:
 		StateManager() {}
 
 		void createState(const std::string& stateName);
+		void createKeyTransition(const std::string& initialState, const std::string& finalState, sf::Keyboard::Key key, bool background = false);
 		void addComponentToState(const std::string& stateName, std::unique_ptr<Component>&& component);
 
 		template <ComponentType T, class... Args>
@@ -34,12 +43,17 @@ namespace gui {
 		// this MUST be called before any calls to render() or tick() are made
 		void setActiveState(const std::string& newStateName);
 
+		void setBackgroundState(const std::string& backgroundState);
+
 		const std::string& getActiveState() const;
+		const std::string& getBackgroundState() const;
 
 	private:
 		std::string activeState; // this is purposely left uninitialized
+		std::string backgroundState = "";
 
 		std::unordered_map<std::string, std::unique_ptr<State>> states;
+		std::unordered_map<sf::Keyboard::Key, StateTransition> keyTransitions;
 	};
 }
 
