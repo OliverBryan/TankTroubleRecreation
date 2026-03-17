@@ -1,5 +1,4 @@
 #include "Button.hpp"
-#include "Log.hpp"
 #include "Resources.hpp"
 
 void gui::Effect::start() {

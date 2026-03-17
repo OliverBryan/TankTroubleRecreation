@@ -24,6 +24,8 @@ public:
 	/// <returns>Maze constructed from the input file</returns>
 	static Maze loadMaze(const std::string& fileName);
 
+	static void init();
+
 	static Maze getRandomMaze();
 
 	/// <summary>
@@ -40,6 +42,8 @@ public:
 	void render(sf::RenderWindow& window) const;
 
 private:
+	static std::vector<Maze> mazes;
+
 	// Size of the maze (by cell, not by pixel)
 	sf::Vector2i size;
 

@@ -9,6 +9,8 @@
 
 #include <Log.hpp>
 
+std::vector<Maze> Maze::mazes;
+
 Maze::Maze(const sf::Vector2i& size, std::vector<sf::RectangleShape>&& walls) : size(size), walls(walls), va(sf::Triangles) {
 	field.setPosition(sf::Vector2f(250.f, 45.f));
 	field.setFillColor(sf::Color(231, 231, 231));
@@ -124,14 +126,22 @@ Maze Maze::loadMaze(const std::string& fileName) {
 	}
 }
 
-// TODO: load mazes only once
-Maze Maze::getRandomMaze() {
+void Maze::init() {
 	std::vector<std::filesystem::path> mazePaths;
 
-	for (const auto& entry : std::filesystem::directory_iterator("./res/mazes"))
-		mazePaths.push_back(entry.path());
+	Log::logStatus("Loading mazes from ./res/mazes", ConsoleColor::LightGreen);
+	for (const auto& entry : std::filesystem::directory_iterator("./res/mazes")) {
+		mazes.push_back(loadMaze(entry.path().string()));
+		Log::logStatus("Loaded " + entry.path().filename().string(), ConsoleColor::LightGreen);
+	}
+	Log::logStatus("Successfully loaded " + std::to_string(mazes.size()) + "mazes");
+}
 
-	std::filesystem::path path = mazePaths[irand(0, mazePaths.size() - 1)];
-	Log::logStatus("Loading " + path.filename().string(), ConsoleColor::LightGreen);
-	return loadMaze(path.string());
+Maze Maze::getRandomMaze() {
+	if (mazes.size() == 0) {
+		Log::logError("Error: Maze::init was not called");
+		std::exit(-1);
+	}
+
+	return mazes[irand(0, mazes.size() - 1)];
 }

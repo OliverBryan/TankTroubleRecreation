@@ -9,11 +9,13 @@
 #include <Log.hpp>
 
 // TODO: some ui bugs with buttons, effects, and state changes (i.e. pause game)
+// tweak log library to be cross platform, to include code file / line references
 
 int main() {
-    // initiate log and load config settings
+    // initiate log, load config settings, load mazes
     Log::init("Log.txt");
     Config::init();
+    Maze::init();
 
     // check settings
     const bool vsyncEnabled = Config::getSetting("enableVSync", true);

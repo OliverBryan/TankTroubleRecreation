@@ -1,7 +1,6 @@
 #include "Collisions.hpp"
 
 #include <SFML/Graphics.hpp>
-#include <Log.hpp>
 
 void ContactListener::BeginContact(b2Contact* contact) {
 	if (hasCategory(contact, collisions::Bullet) && hasCategory(contact, collisions::Wall))
