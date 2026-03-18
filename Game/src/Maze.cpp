@@ -136,7 +136,7 @@ void Maze::init() {
 		mazes.push_back(loadMaze(entry.path().string()));
 		Log::logStatus("Loaded " + entry.path().filename().string(), ConsoleColor::LightGreen);
 	}
-	Log::logStatus("Successfully loaded " + std::to_string(mazes.size()) + "mazes");
+	Log::logStatus("Successfully loaded " + std::to_string(mazes.size()) + " mazes");
 }
 
 Maze Maze::getRandomMaze() {
@@ -211,18 +211,18 @@ Maze Maze::generateMaze() {
 
 	// construct maze object from array representation
 	std::vector<sf::RectangleShape> walls;
+	std::vector<sf::RectangleShape> topWall;
+	std::vector<sf::RectangleShape> leftWall;
 
 	// right side of the maze
 	sf::RectangleShape rightWall(sf::Vector2f(2.f, 560.f));
 	rightWall.setPosition(808.f, 45.f);
 	rightWall.setFillColor(sf::Color::Black);
-	walls.push_back(rightWall);
 
 	// bottom of the maze
-	sf::RectangleShape leftWall(sf::Vector2f(560.f, 2.f));
-	leftWall.setPosition(250.f, 603.f);
-	leftWall.setFillColor(sf::Color::Black);
-	walls.push_back(leftWall);
+	sf::RectangleShape bottomWall(sf::Vector2f(560.f, 2.f));
+	bottomWall.setPosition(250.f, 603.f);
+	bottomWall.setFillColor(sf::Color::Black);
 
 	// wall shape
 	sf::RectangleShape rs;
@@ -235,17 +235,36 @@ Maze Maze::generateMaze() {
 			if ((grid[y][x] & N) == 0) {
 				rs.setSize(sf::Vector2f(62.f, 2.f));
 				rs.setPosition(x * 62.f + 250.f, y * 62.f + 45.f);
-				walls.push_back(rs);
+
+				if (y != 0)
+					walls.push_back(rs);
+				else topWall.push_back(rs);
 			}
 			
 			// should have a left wall
 			if ((grid[y][x] & W) == 0) {
 				rs.setSize(sf::Vector2f(2.f, 64.f));
 				rs.setPosition(x * 62.f + 250.f, y * 62.f + 45.f);
-				walls.push_back(rs);
+
+				if (x != 0)
+					walls.push_back(rs);
+				else leftWall.push_back(rs);
 			}
 		}
 	}
+
+	constexpr int numWallsToRemove = 10;
+	for (int i = 0; i < numWallsToRemove; i++) {
+		std::swap(walls[irand(0, walls.size() - 1)], walls.back());
+		walls.pop_back();
+	}
+
+	// add these after removal so that we only remove internal walls
+	walls.insert(walls.end(), leftWall.begin(), leftWall.end());
+	walls.insert(walls.end(), topWall.begin(), topWall.end());
+
+	walls.push_back(rightWall);
+	walls.push_back(bottomWall);
 
 	return Maze(sf::Vector2i(9, 9), std::move(walls));
 }
