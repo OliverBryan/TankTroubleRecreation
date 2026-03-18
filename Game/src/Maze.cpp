@@ -6,6 +6,8 @@
 #include <sstream>
 #include <algorithm>
 #include <filesystem>
+#include <array>
+#include <cstdint>
 
 #include <Log.hpp>
 
@@ -47,7 +49,7 @@ Maze Maze::loadMaze(const std::string& fileName) {
 	std::ifstream file(fileName);
 	std::vector<sf::RectangleShape> walls;
 
-	// right size of the maze
+	// right side of the maze
 	sf::RectangleShape rightWall(sf::Vector2f(2.f, 560.f));
 	rightWall.setPosition(808.f, 45.f);
 	rightWall.setFillColor(sf::Color::Black);
@@ -144,4 +146,106 @@ Maze Maze::getRandomMaze() {
 	}
 
 	return mazes[irand(0, mazes.size() - 1)];
+}
+
+constexpr uint8_t N = 0x01;
+constexpr uint8_t S = 0x02;
+constexpr uint8_t E = 0x04;
+constexpr uint8_t W = 0x08;
+
+std::pair<int, int> diff(uint8_t dir) {
+	switch (dir) {
+	case N:
+		return std::pair(0, -1);
+	case S:
+		return std::pair(0, 1);
+	case E:
+		return std::pair(1, 0);
+	case W:
+		return std::pair(-1, 0);
+	default:
+		Log::logError("Maze generation failure (Maze.cpp)");
+		std::exit(-1);
+	}
+}
+
+uint8_t opposite(uint8_t dir) {
+	switch (dir) {
+	case N:
+		return S;
+	case S:
+		return N;
+	case E:
+		return W;
+	case W:
+		return E;
+	default:
+		Log::logError("Maze generation failure (Maze.cpp)");
+		std::exit(-1);
+	}
+}
+
+void Maze::recursiveBacktrack(int x, int y, std::array<std::array<uint8_t, 9>, 9>& grid, std::mt19937& gen) {
+	std::array<uint8_t, 4> dirs { N, S, E, W };
+	std::shuffle(std::begin(dirs), std::end(dirs), gen);
+
+	for (const uint8_t dir : dirs) {
+		auto d = diff(dir);
+		int xp = x + d.first;
+		int yp = y + d.second;
+
+		if (xp >= 0 && xp <= 8 && yp >= 0 && yp <= 8 && grid[yp][xp] == 0) {
+			grid[y][x] |= dir;
+			grid[yp][xp] |= opposite(dir);
+			recursiveBacktrack(xp, yp, grid, gen);
+		}
+	}
+}
+
+Maze Maze::generateMaze() {
+	std::array<std::array<uint8_t, 9>, 9> grid { 0 };
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	recursiveBacktrack(0, 0, grid, gen);
+
+	// construct maze object from array representation
+	std::vector<sf::RectangleShape> walls;
+
+	// right side of the maze
+	sf::RectangleShape rightWall(sf::Vector2f(2.f, 560.f));
+	rightWall.setPosition(808.f, 45.f);
+	rightWall.setFillColor(sf::Color::Black);
+	walls.push_back(rightWall);
+
+	// bottom of the maze
+	sf::RectangleShape leftWall(sf::Vector2f(560.f, 2.f));
+	leftWall.setPosition(250.f, 603.f);
+	leftWall.setFillColor(sf::Color::Black);
+	walls.push_back(leftWall);
+
+	// wall shape
+	sf::RectangleShape rs;
+	rs.setFillColor(sf::Color::Black);
+
+	// check each cell to see where the walls should go
+	for (int y = 0; y < 9; y++) {
+		for (int x = 0; x < 9; x++) {
+			// should have a top wall
+			if ((grid[y][x] & N) == 0) {
+				rs.setSize(sf::Vector2f(62.f, 2.f));
+				rs.setPosition(x * 62.f + 250.f, y * 62.f + 45.f);
+				walls.push_back(rs);
+			}
+			
+			// should have a left wall
+			if ((grid[y][x] & W) == 0) {
+				rs.setSize(sf::Vector2f(2.f, 64.f));
+				rs.setPosition(x * 62.f + 250.f, y * 62.f + 45.f);
+				walls.push_back(rs);
+			}
+		}
+	}
+
+	return Maze(sf::Vector2i(9, 9), std::move(walls));
 }

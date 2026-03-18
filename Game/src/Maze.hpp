@@ -24,6 +24,8 @@ public:
 	/// <returns>Maze constructed from the input file</returns>
 	static Maze loadMaze(const std::string& fileName);
 
+	static Maze generateMaze();
+
 	static void init();
 
 	static Maze getRandomMaze();
@@ -49,6 +51,8 @@ private:
 
 	sf::VertexArray va;
 	inline void pushRect(const sf::RectangleShape& rs, sf::VertexArray& va) const;
+
+	static void recursiveBacktrack(int x, int y, std::array<std::array<uint8_t, 9>, 9>& grid, std::mt19937& gen);
 
 	// Background
 	sf::RectangleShape field = sf::RectangleShape(static_cast<sf::Vector2f>(size * 62) + sf::Vector2f(2.0f, 2.0f));

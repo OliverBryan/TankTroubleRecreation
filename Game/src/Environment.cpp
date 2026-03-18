@@ -2,7 +2,7 @@
 #include "Config.hpp"
 #include "Collisions.hpp"
 
-Environment::Environment() : maze(Maze::getRandomMaze()), 
+Environment::Environment() : maze(Maze::generateMaze()), 
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
 							 player1(0), player2(1) {
 	// set up box2d state
@@ -71,7 +71,7 @@ void Environment::registerWalls() {
 
 void Environment::resetState(bool firstCall) {
 	if (!firstCall)
-		maze = Maze::getRandomMaze();
+		maze = Maze::generateMaze();
 
 	b2Body* body = world->GetBodyList();
 	while (body) {
