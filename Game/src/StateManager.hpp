@@ -13,7 +13,7 @@ namespace gui {
 	struct StateTransition {
 		std::string initialState;
 		std::string finalState;
-		bool background;
+		std::string backgroundState;
 	};
 
 	class StateManager {
@@ -21,7 +21,7 @@ namespace gui {
 		StateManager() {}
 
 		void createState(const std::string& stateName);
-		void createKeyTransition(const std::string& initialState, const std::string& finalState, sf::Keyboard::Key key, bool background = false);
+		void createKeyTransition(const std::string& initialState, const std::string& finalState, sf::Keyboard::Key key, const std::string& backgroundState = "");
 		void addComponentToState(const std::string& stateName, std::unique_ptr<Component>&& component);
 
 		template <ComponentType T, class... Args>
@@ -53,7 +53,7 @@ namespace gui {
 		std::string backgroundState = "";
 
 		std::unordered_map<std::string, std::unique_ptr<State>> states;
-		std::unordered_map<sf::Keyboard::Key, StateTransition> keyTransitions;
+		std::unordered_map<sf::Keyboard::Key, std::vector<StateTransition>> keyTransitions;
 	};
 }
 

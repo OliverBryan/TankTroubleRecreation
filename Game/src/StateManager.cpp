@@ -5,7 +5,7 @@ void gui::StateManager::createState(const std::string& stateName) {
 	states.emplace(stateName, std::make_unique<State>());
 }
 
-void gui::StateManager::createKeyTransition(const std::string& initialState, const std::string& finalState, sf::Keyboard::Key key, bool background) {
+void gui::StateManager::createKeyTransition(const std::string& initialState, const std::string& finalState, sf::Keyboard::Key key, const std::string& backgroundState) {
 	if (states.count(initialState) == 0) {
 		Log::logError("Could not find state \"" + initialState + "\" (StateManager::createKeyTransition)");
 		return;
@@ -15,7 +15,13 @@ void gui::StateManager::createKeyTransition(const std::string& initialState, con
 		Log::logError("Could not find state \"" + finalState + "\" (StateManager::createKeyTransition)");
 	}
 
-	keyTransitions.emplace(key, StateTransition(initialState, finalState, background));
+	if (backgroundState != "" && states.count(backgroundState) == 0) {
+		Log::logError("Could not find state \"" + backgroundState + "\" (StateManager::createKeyTransition)");
+	}
+
+	if (keyTransitions.count(key) == 0)
+		keyTransitions.emplace(key, std::vector<StateTransition> { StateTransition(initialState, finalState, backgroundState) });
+	else keyTransitions[key].push_back(StateTransition(initialState, finalState, backgroundState));
 }
 
 void gui::StateManager::addComponentToState(const std::string& stateName, std::unique_ptr<Component>&& component) {
@@ -50,13 +56,17 @@ void gui::StateManager::handleEvent(sf::Event e) {
 	if (e.type == sf::Event::KeyPressed) {
 		auto it = keyTransitions.find(e.key.code);
 		
-		if (it != keyTransitions.end() && (*it).second.initialState == activeState) {
-			activeState = (*it).second.finalState;
-			Log::logStatus("Set active game state to \"" + activeState + "\"", ConsoleColor::Green);
-			
-			if ((*it).second.background) {
-				backgroundState = (*it).second.initialState;
-				Log::logStatus("Set background game state to \"" + backgroundState + "\"", ConsoleColor::Green);
+		if (it != keyTransitions.end()) {
+			for (const auto& keyTransition : (*it).second) {
+				if (keyTransition.initialState == activeState) {
+					activeState = keyTransition.finalState;
+					Log::logStatus("Set active game state to \"" + activeState + "\"", ConsoleColor::Green);
+
+					backgroundState = keyTransition.backgroundState;
+					Log::logStatus("Set background game state to \"" + (backgroundState != "" ? backgroundState : "null") + "\"", ConsoleColor::Green);
+
+					break; // this might break stuff later, but it is necessary for the current implementation
+				}
 			}
 		}
 	}
@@ -78,7 +88,7 @@ void gui::StateManager::setBackgroundState(const std::string& newStateName) {
 	}
 
 	backgroundState = newStateName;
-	Log::logStatus("Set background game state to \"" + (backgroundState == "" ? newStateName : "null") + "\"", ConsoleColor::Green);
+	Log::logStatus("Set background game state to \"" + (backgroundState != "" ? newStateName : "null") + "\"", ConsoleColor::Green);
 }
 
 const std::string& gui::StateManager::getActiveState() const {

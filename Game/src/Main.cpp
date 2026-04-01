@@ -55,10 +55,20 @@ int main() {
         manager.setActiveState("game");
         manager.setBackgroundState("");
     });
+    manager.createComponentForState<gui::Button>("pause", sf::Vector2f(525.f, 465.f), size, 10.f, sf::Color(52, 235, 134), sf::Color::Black, "Settings", 36, hover, click, [&manager]() {
+        manager.setActiveState("settings");
+        manager.setBackgroundState("");
+    });
     manager.createComponentForState<gui::Label>("pause", sf::Vector2f(525.f, 200.f), 50, "Game Paused");
-    manager.createKeyTransition("game", "pause", sf::Keyboard::Escape, true);
+    manager.createKeyTransition("game", "pause", sf::Keyboard::Escape, "game");
+    manager.createKeyTransition("pause", "game", sf::Keyboard::Escape);
+
+    manager.createState("settings");
+    manager.createKeyTransition("settings", "pause", sf::Keyboard::Escape, "game");
 
     manager.setActiveState("menu");
+
+
     // TEMPORARY
 
     // clock and accumulator to keep a fixed speed update loop
