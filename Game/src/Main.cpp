@@ -10,6 +10,7 @@
 
 // TODO: some ui bugs with buttons, effects, and state changes (i.e. pause game)
 // tweak log library to be cross platform, to include code file / line references
+// make tanks have more friction against walls
 
 int main() {
     // initiate log, load config settings, load mazes

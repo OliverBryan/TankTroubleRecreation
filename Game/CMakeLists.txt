@@ -64,7 +64,8 @@ add_executable(Game ./src/Collisions.cpp ./src/Collisions.hpp
 			    ./src/Button.cpp ./src/Button.hpp
 			    ./src/RoundedRectangleShape.cpp ./src/RoundedRectangleShape.hpp
 			    ./src/Label.cpp ./src/Label.hpp
-			    ./src/ColorFilter.cpp ./src/ColorFilter.hpp)
+			    ./src/ColorFilter.cpp ./src/ColorFilter.hpp
+			    ./src/Powerup.cpp ./src/Powerup.hpp)
 target_link_libraries(Game PRIVATE sfml-graphics sfml-network box2d Log libconfig++)
 
 # copy dlls post build

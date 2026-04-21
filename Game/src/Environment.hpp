@@ -5,6 +5,7 @@
 #include "Interface.hpp"
 #include "Maze.hpp"
 #include "Component.hpp"
+#include "Powerup.hpp"
 
 class ContactListener;
 
@@ -72,6 +73,10 @@ private:
 	Interface ui;
 
 	Maze maze;
+
+	// temporary
+	Powerup powerup;
+	// temporary
 
 	std::vector<Bullet> bullets;
 

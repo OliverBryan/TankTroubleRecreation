@@ -1,0 +1,12 @@
+[2026-04-19.21:16:57]: Initializing Log
+[2026-04-19.21:16:57]: Loading settings.cfg...
+[2026-04-19.21:16:57]: Settings.cfg loaded
+[2026-04-19.21:16:57]: VSync is enabled
+[2026-04-19.21:16:57]: Loading proper_maze.dat
+[2026-04-19.21:16:57]: Loading maze.dat
+[2026-04-19.21:16:57]: Tank collisions are disabled
+[2026-04-19.21:16:57]: Infinite bullet time is disabled
+[2026-04-19.21:16:57]: Bullets do not collide with each other
+[2026-04-19.21:16:57]: Bullets last for 10 seconds
+[2026-04-19.21:16:57]: Rounds continue for 4 seconds after a player death
+[2026-04-19.21:16:58]: FPS: 138

@@ -1,6 +1,7 @@
 #include "Environment.hpp"
 #include "Config.hpp"
 #include "Collisions.hpp"
+#include "Powerup.hpp"
 
 Environment::Environment() : maze(Maze::generateMaze()), 
 							 world(new b2World(b2Vec2(0.0f, 0.0f))), 
@@ -102,6 +103,8 @@ void Environment::render(sf::RenderWindow& window) const {
 
 	for (const auto& b : bullets)
 		window.draw(b.shape);
+
+	powerup.render(window);
 }
 
 void Environment::handleDeath(Bullet& b, Tank& t, const std::string& n) {
@@ -143,6 +146,8 @@ void Environment::tick() {
 	// update the player positions
 	if (p1Alive) player1.tick(this);
 	if (p2Alive) player2.tick(this);
+
+	powerup.tick();
 
 	const auto& deaths = listener->getDeaths();
 
