@@ -5,7 +5,7 @@ gui::Label::Label(const sf::Vector2f& position, const unsigned int size, const s
 	text.setCharacterSize(size);
 	text.setString(textString);
 	text.setStyle(sf::Text::Bold);
-	text.setFont(Resources::getFont());
+	text.setFont(Resources::getFont("roboto"));
 	text.setPosition(position);
 	text.setFillColor(color);
 

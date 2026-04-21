@@ -131,12 +131,12 @@ Maze Maze::loadMaze(const std::string& fileName) {
 void Maze::init() {
 	std::vector<std::filesystem::path> mazePaths;
 
-	Log::logStatus("Loading mazes from ./res/mazes", ConsoleColor::LightGreen);
+	Log::logStatus("Loading mazes from ./res/mazes", ConsoleColor::Pink);
 	for (const auto& entry : std::filesystem::directory_iterator("./res/mazes")) {
 		mazes.push_back(loadMaze(entry.path().string()));
-		Log::logStatus("Loaded " + entry.path().filename().string(), ConsoleColor::LightGreen);
+		Log::logStatus("Loaded " + entry.path().filename().string(), ConsoleColor::Pink);
 	}
-	Log::logStatus("Successfully loaded " + std::to_string(mazes.size()) + " mazes");
+	Log::logStatus("Successfully loaded " + std::to_string(mazes.size()) + " mazes", ConsoleColor::Pink);
 }
 
 Maze Maze::getRandomMaze() {

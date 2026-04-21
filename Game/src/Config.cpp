@@ -1,5 +1,4 @@
 #include "Config.hpp"
-#include <Log.hpp>
 
 // Static member variables
 libconfig::Config Config::cfg;

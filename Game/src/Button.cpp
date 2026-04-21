@@ -71,7 +71,7 @@ gui::Button::Button(const sf::Vector2f& position, const sf::Vector2f& size, floa
 	text.setCharacterSize(textSize);
 	text.setString(str);
 	text.setStyle(sf::Text::Bold);
-	text.setFont(Resources::getFont());
+	text.setFont(Resources::getFont("roboto"));
 
 	positionText();
 	text.setFillColor(textColor);

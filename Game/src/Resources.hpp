@@ -25,13 +25,13 @@ public:
 	/// Fetches the font object used throughout the game (always Roboto Thin)
 	/// </summary>
 	/// <returns>Font object for Roboto Thin</returns>
-	static sf::Font& getFont();
+	static sf::Font& getFont(const std::string& name);
 
 private:
 	static bool initialized;
 
-	static std::unordered_map<std::string, sf::Texture> resources;
-	static sf::Font font;
+	static std::unordered_map<std::string, sf::Texture> textures;
+	static std::unordered_map<std::string, sf::Font> fonts;
 };
 
 #endif /* RESOURCES_HPP */

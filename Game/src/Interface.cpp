@@ -13,8 +13,8 @@ Interface::Interface() {
 	greenTankSprite.setPosition(600.f, 610.f);
 	redTankSprite.setPosition(320.f, 610.f);
 
-	greenScore.setFont(Resources::getFont());
-	redScore.setFont(Resources::getFont());
+	greenScore.setFont(Resources::getFont("roboto"));
+	redScore.setFont(Resources::getFont("roboto"));
 
 	greenTankSprite.setColor(Config::getPlayerColor(0));
 	redTankSprite.setColor(Config::getPlayerColor(1));
